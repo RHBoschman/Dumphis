@@ -4,7 +4,7 @@
 #include "iostream"
 #include "filesystem"
 
-namespace std::filesystem = fs;
+namespace fs = std::filesystem;
 
 class Manager
 {
@@ -14,9 +14,13 @@ public:
 
 private:
 	tls::LogManager log;
+	fs::path projectPath;
+	fs::path snapshotPath;
+	std::string file_dumpcdb = "dumpcdb.csv";
+	fs::path path_dumpcdb;
+
 
 	void askForInput(void);
-	bool verifyInput(void);
-	bool verifyFile(void);
+	bool verifyInput(const std::string& proj, const std::string& file);
 };
 
