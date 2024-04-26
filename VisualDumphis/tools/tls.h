@@ -2,6 +2,7 @@
 
 #include "log.h"
 #include "time.h"
+#include "file.h"
 
 namespace tls
 {
@@ -9,4 +10,6 @@ namespace tls
 	class LogManager;
 
 	class Time;
+
+	class File;
 }

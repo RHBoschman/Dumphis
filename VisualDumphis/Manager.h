@@ -1,8 +1,9 @@
 #pragma once
 
+#include <iostream>
+#include <filesystem>
 #include "tools/tls.h"
-#include "iostream"
-#include "filesystem"
+#include "DumpCDBManager.h"
 
 namespace fs = std::filesystem;
 
@@ -22,5 +23,6 @@ private:
 
 	void askForInput(void);
 	bool verifyInput(const std::string& proj, const std::string& file);
+	void readFiles(void);
 };
 

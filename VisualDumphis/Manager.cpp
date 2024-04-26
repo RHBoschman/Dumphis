@@ -25,6 +25,8 @@ void Manager::start(void) {
 			askAgain = true;
 		}
 	} while (askAgain);
+
+	readFiles();
 }
 
 void Manager::askForInput(void) {
@@ -81,3 +83,7 @@ bool Manager::verifyInput(const std::string& project, const std::string& snapsho
 	return true;
 }
 
+void Manager::readFiles(void) {
+	DumpCDBManager dumpcdbRead;
+	dumpcdbRead.createData(path_dumpcdb.string());
+}

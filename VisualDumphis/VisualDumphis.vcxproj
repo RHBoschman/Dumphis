@@ -129,14 +129,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DumpCDB.cpp" />
+    <ClCompile Include="DumpCDBManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Manager.cpp" />
+    <ClCompile Include="tools\file.cpp" />
     <ClCompile Include="tools\log.cpp" />
     <ClCompile Include="tools\log_temp.cpp" />
     <ClCompile Include="tools\time.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DumpCDB.h" />
+    <ClInclude Include="DumpCDBManager.h" />
     <ClInclude Include="Manager.h" />
+    <ClInclude Include="tools\file.h" />
     <ClInclude Include="tools\log.h" />
     <ClInclude Include="tools\time.h" />
     <ClInclude Include="tools\tls.h" />
