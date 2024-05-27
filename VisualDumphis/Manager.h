@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <filesystem>
+#include <format>
 #include "tools/tls.h"
 #include "DumpCDBManager.h"
 
@@ -15,6 +16,7 @@ public:
 
 private:
 	tls::LogManager log;
+	tls::Gui gui;
 	fs::path projectPath;
 	fs::path snapshotPath;
 	std::string file_dumpcdb = "dumpcdb.csv";

@@ -39,6 +39,7 @@ namespace tls {
 		return content;
 	}
 
+	// Read line and return it
 	std::string File::readLine(void) {
 		std::string line;
 		if (std::getline(file, line)) {
@@ -49,6 +50,8 @@ namespace tls {
 		}
 	}
 
+	// Read line, write to referenced argument and 
+	// return whether reading was successful or not
 	bool File::readLine2(std::string& line) {
 		if (std::getline(file, line))
 			return true;

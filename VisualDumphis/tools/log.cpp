@@ -7,12 +7,13 @@ namespace tls {
     bool LogAdmin::showDate = false;
     bool LogAdmin::showTimeStamp = false;
     bool LogAdmin::showCallers = false;
+    bool LogAdmin::doCout = true;
     int LogAdmin::titleLength = 40;
 
     /**
     * @brief Set the output file to log to
     *
-    * @param fp The file path
+    * @param fp: The file path
     */
     void LogAdmin::setOutputFile(const std::string& fP) {
         filePath = fP;
@@ -65,6 +66,10 @@ namespace tls {
         titleLength = len;
     }
 
+    void LogAdmin::disableStdCout(void) {
+        doCout = false;
+    }
+
     bool LogAdmin::isFilePresent(void) const {
         if (filePath == "")
             return false;
@@ -77,6 +82,12 @@ namespace tls {
         time = Time();
     }
 
+    LogManager::LogManager(const std::string& cllr) {
+        prefixes.push_back("");
+        time = Time();
+        setCaller(cllr);
+    }
+
     LogManager::~LogManager() {
         if (logFile.is_open())
             logFile.close();
@@ -85,7 +96,8 @@ namespace tls {
     void LogManager::logNoNl(const std::string& msg) {
         std::ostringstream oss;
         oss << msg;
-        std::cout << oss.str();
+        if (doCout)
+            std::cout << oss.str();
         writeFile(oss);
     }
 
@@ -108,14 +120,37 @@ namespace tls {
         oss << (showCallers ? caller : "");
         oss << (((showDate || showTimeStamp || showCallers) && caller != "") ? ": " : "");
         oss << prefixes[prefix] << msg;
-        std::cout << oss.str();
+
+        if (doCout)
+            std::cout << oss.str();
         writeFile(oss);
+    }
+
+    void LogManager::logInfo(std::string msg) {
+        msg = "INFO: " + msg;
+        log(msg);
+    }
+
+    void LogManager::logWarning(std::string msg) {
+        msg = "WARNING: " + msg;
+        log(msg);
+    }
+
+    void LogManager::logError(std::string msg) {
+        msg = "ERROR: " + msg;
+        log(msg);
+    }
+
+    void LogManager::logFatal(std::string msg) {
+        msg = "FATAL: " + msg;
+        log(msg);
     }
 
     void LogManager::blankLine(void) {
         std::ostringstream oss;
         oss << "\n";
-        std::cout << oss.str();
+        if (doCout)
+            std::cout << oss.str();
         writeFile(oss);
     }
 
@@ -167,7 +202,8 @@ namespace tls {
         else
             setLine(oss, singleLineLength);
 
-        std::cout << "\n" << oss.str();
+        if(doCout)
+            std::cout << "\n" << oss.str();
         writeFile(oss);
     }
 
@@ -235,6 +271,10 @@ namespace tls {
         for (int i = 0; i < cnt; i++) {
             os << '-';
         }
+    }
+
+    void SimpleLog::log(const std::string& msg) {
+        std::cout << "\n" + msg;
     }
 }
 

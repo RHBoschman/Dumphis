@@ -1,47 +1,28 @@
 #include "Manager.h"
 
-Manager::Manager(void) {
-	log.setCaller("Manager");
-	log.log("Constructed");
-}
+Manager::Manager(void) : log("Manager") {}
 
 void Manager::start(void) {
-	log.log("Started");
+	if (gui.askClosedQuestion("Have you built the project?", true))
+		askForInput();
+	else
+		exit(0);
 
-	std::string choice;
-	bool askAgain = false;
-	std::cout << "\nMake sure you have built the project";
-	do {
-		std::cout << "\nDid you build the project? [Y/N] ";
-		std::cin >> choice;
-		if (choice == "Y" || choice == "y") {
-			askAgain = false;
-			askForInput();
-		}
-		else if (choice == "N" || choice == "n") {
-			exit(0);
-		}
-		else {
-			askAgain = true;
-		}
-	} while (askAgain);
-
+	log.blankLine();
 	readFiles();
 }
 
 void Manager::askForInput(void) {
 	std::string projectPathStr, snapshotPathStr;
 	
-	std::cout << "\nPlease enter the path to the project:\n";
-	std::cin.ignore();
-	std::getline(std::cin, projectPathStr);
+	projectPathStr = gui.askOpenQuestion("Please enter the path to the project:");
 	std::cout << "You entered: " << projectPathStr;
-	std::cout << "\nPlease enter the path to the snapshot (MUST correspond with project):\n";
-	std::getline(std::cin, snapshotPathStr);
+
+	snapshotPathStr = gui.askOpenQuestion("Please enter the path to the snapshot (MUST correspond with project):");
 	std::cout << "You entered: " << snapshotPathStr;
 
 	if (!verifyInput(projectPathStr, snapshotPathStr)) {
-		std::cerr << "\nError: Problem with given paths. Application will terminate";
+		log.logFatal("Problem with given paths. Application will terminate");
 		exit(0);
 	} 
 	else {
@@ -65,18 +46,18 @@ bool Manager::verifyInput(const std::string& project, const std::string& snapsho
 	// Further checks for project come later (TODO)
 
 	if (!fs::exists(snapshotPath)) {
-		std::cerr << "\nError: Snapshot's path " << snapshotPath.string() << " does not exist";
+		log.logError(std::format("Snapshot's path {} does not exist", snapshotPath.string()));
 		return false;
 	}
 
 	if (!fs::is_directory(snapshotPath)) {
-		std::cerr << "\nError: " << snapshotPath.string() << " is not a directory. (Did you unzip?)";
+		log.logError(std::format("{} is not a directory. (Did you unzip?)", snapshotPath.string()));
 		return false;
 	}
 
 	path_dumpcdb = snapshotPath / file_dumpcdb;
 	if (!fs::exists(path_dumpcdb)) {
-		std::cerr << "\nError: " << file_dumpcdb << " does not exist at " << path_dumpcdb.string();
+		log.logError(std::format("{} does not exist at {}", file_dumpcdb, path_dumpcdb.string()));
 		return false;
 	}
 
@@ -85,5 +66,6 @@ bool Manager::verifyInput(const std::string& project, const std::string& snapsho
 
 void Manager::readFiles(void) {
 	DumpCDBManager dumpcdbRead;
+	std::cout << "\nFile path: " << path_dumpcdb.string();
 	dumpcdbRead.createData(path_dumpcdb.string());
 }

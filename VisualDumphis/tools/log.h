@@ -22,12 +22,14 @@ namespace tls {
 		void setShowCallers(const bool sC);
 		void setAllParams(const bool showDate, const bool showTimeStamp, const bool showCallers);
 		void setTitleLength(const int len);
+		void disableStdCout(void);
 
 	protected:
 		static std::string filePath;
 		static bool showDate;
 		static bool showTimeStamp;
 		static bool showCallers;
+		static bool doCout;
 		static int titleLength;
 		std::ofstream logFile;
 
@@ -37,10 +39,15 @@ namespace tls {
 	class LogManager : LogAdmin {
 	public:
 		LogManager();
+		LogManager(const std::string& cllr);
 		~LogManager();
 
 		void logNoNl(const std::string& msg);
 		void log(const std::string& msg, const unsigned int prefix = 0);
+		void logInfo(std::string msg);
+		void logWarning(std::string msg);
+		void logError(std::string msg);
+		void logFatal(std::string msg);
 		void blankLine(void);
 		void setCaller(const std::string& cllr);
 		void removeCaller(void);
@@ -73,6 +80,11 @@ namespace tls {
 
 		template<typename T, typename... Args>
 		void formatString(std::ostream& os, const std::string& format, T value, Args... args);
+	};
+
+	class SimpleLog {
+	public:
+		static void log(const std::string& msg);
 	};
 }
 

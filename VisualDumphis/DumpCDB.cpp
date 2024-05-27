@@ -20,10 +20,10 @@ void DumpCDB::setConnections(const std::vector<int>& con) {
 
 void DumpCDB::printData(void) {
 	std::cout << "\nDumpCDB data:";
-	std::cout << "\nUnit id:" << id;
-	std::cout << "\nFunction: " << funcName;
-	std::cout << "\nCommands: " << n_cmds;
-	std::cout << "\nConnections: ";
+	std::cout << "\n\tUnit id: " << id;
+	std::cout << "\n\tFunction: " << funcName;
+	std::cout << "\n\tCommands: " << n_cmds;
+	std::cout << "\n\tConnections: ";
 	for (int e : dataConnections) {
 		std::cout << e << " ";
 	}
