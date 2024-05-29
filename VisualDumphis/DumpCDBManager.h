@@ -5,6 +5,8 @@
 #include "tools/tls.h";
 #include "DumpCDB.h"
 
+#define MAX_DATA_ELEMENTS 8
+
 class DumpCDBManager {
 public:
 	DumpCDBManager();
@@ -20,5 +22,6 @@ private:
 	std::vector<int> getE_DATA(const std::string& line);
 	bool containsStr(const std::string& line, const std::string& str);
 	std::string getAfterComma(const std::string& line);
+	int getDataValue(std::string& str);
 };
 
