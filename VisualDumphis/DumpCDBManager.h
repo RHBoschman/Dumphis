@@ -6,6 +6,7 @@
 #include "DumpCDB.h"
 
 #define MAX_DATA_ELEMENTS 8
+#define PRINT_ALL 0
 
 class DumpCDBManager {
 public:

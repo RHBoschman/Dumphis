@@ -131,6 +131,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CDBData.cpp" />
+    <ClCompile Include="CDBDataManager.cpp" />
     <ClCompile Include="DumpCDB.cpp" />
     <ClCompile Include="DumpCDBManager.cpp" />
     <ClCompile Include="main.cpp" />
@@ -142,6 +144,8 @@
     <ClCompile Include="tools\time.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CDBData.h" />
+    <ClInclude Include="CDBDataManager.h" />
     <ClInclude Include="DumpCDB.h" />
     <ClInclude Include="DumpCDBManager.h" />
     <ClInclude Include="Manager.h" />

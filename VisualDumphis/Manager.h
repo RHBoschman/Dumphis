@@ -5,6 +5,13 @@
 #include <format>
 #include "tools/tls.h"
 #include "DumpCDBManager.h"
+#include "CDBDataManager.h"
+
+/* TODO
+* - Verify project path input
+* - Find and parse cdb_data.h
+* - Create data with CDBDataManger (as CDBData objects)
+*/
 
 namespace fs = std::filesystem;
 

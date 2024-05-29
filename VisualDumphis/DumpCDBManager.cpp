@@ -41,10 +41,12 @@ void DumpCDBManager::createData(const std::string& path) {
 		}
 	}
 
+#if PRINT_ALL
 	for (DumpCDB e : data) {
 		e.printData();
 		log.blankLine();
 	}
+#endif
 }
 
 int DumpCDBManager::getE_CDB(const std::string& line) {
