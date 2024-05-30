@@ -12,7 +12,7 @@ void DumpCDBManager::createData(const std::string& path) {
 	std::string function;
 	std::vector<int> dataCons;
 	int n_cmds = 0;
-
+	int index = 0;
 	while (file.readLine2(line)) {
 		if (containsStr(line, "CDB")) {
 			inElement = true;
@@ -37,9 +37,14 @@ void DumpCDBManager::createData(const std::string& path) {
 			element.setCmds(n_cmds);
 			data.push_back(element);
 			n_cmds = 0;
+#if PRINT_ALL
 			log.logInfo(std::format("Processed CDB data with id {}", id));
+#endif
+			index++;
 		}
 	}
+
+	log.logInfo(std::format("Found {} CDB data elements", index));
 
 #if PRINT_ALL
 	for (DumpCDB e : data) {

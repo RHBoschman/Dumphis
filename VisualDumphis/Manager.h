@@ -22,16 +22,18 @@ public:
 	void start(void);
 
 private:
+	DumpCDBManager dumpcdbRead;
+	CDBDataManager cdbdataRead;
 	tls::LogManager log;
 	tls::Gui gui;
 	fs::path projectPath;
 	fs::path snapshotPath;
 	std::string file_dumpcdb = "dumpcdb.csv";
-	fs::path path_dumpcdb;
-
+	std::string file_cdb_data = "global\\include\\cdb_data.h";
 
 	void askForInput(void);
 	bool verifyInput(const std::string& proj, const std::string& file);
 	void readFiles(void);
+	bool doesFileExist(const fs::path& root, const std::string& relativePath);
 };
 

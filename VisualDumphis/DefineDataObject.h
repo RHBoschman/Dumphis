@@ -3,15 +3,15 @@
 #include <string>
 #include <iostream>
 
-class CDBData
+class DefineDataObject
 {
 public:
 	void setName(const std::string& nm);
-	void setValue(const int val);
+	void setValue(const unsigned int val);
 	void printData(void) const;
 
 private:
 	std::string name;
-	int value;
+	unsigned int value;
 };
 

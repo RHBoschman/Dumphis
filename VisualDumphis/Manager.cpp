@@ -21,6 +21,10 @@ void Manager::askForInput(void) {
 	snapshotPathStr = gui.askOpenQuestion("Please enter the path to the snapshot (MUST correspond with project):");
 	std::cout << "You entered: " << snapshotPathStr;
 
+	//TMP FOR QUICKER TESTING
+	projectPathStr = "C:\\Users\\robinheslinga\\BTProjects\\RotorCore";
+	snapshotPathStr = "C:\\Users\\robinheslinga\\OneDrive - Boschman Technologies B.V\\Documenten\\Projecten\\dumphis visualiseren\\S0000011";
+
 	if (!verifyInput(projectPathStr, snapshotPathStr)) {
 		log.logFatal("Problem with given paths. Application will terminate");
 		exit(0);
@@ -34,16 +38,15 @@ bool Manager::verifyInput(const std::string& project, const std::string& snapsho
 	projectPath = project;
 	snapshotPath = snapshot;
 
-	/*if (!fs::exists(projectPath)) {
-		std::cerr << "\nError: Snapshot's path " << projectPath.string() << " does not exist";
+	if (!fs::exists(projectPath)) {
+		std::cerr << "\nError: Project's path " << projectPath.string() << " does not exist";
 		return false;
 	}
 
 	if (!fs::is_directory(projectPath)) {
 		std::cerr << "\nError: " << projectPath.string() << " is not a directory";
 		return false;
-	}*/
-	// Further checks for project come later (TODO)
+	}
 
 	if (!fs::exists(snapshotPath)) {
 		log.logError(std::format("Snapshot's path {} does not exist", snapshotPath.string()));
@@ -55,17 +58,35 @@ bool Manager::verifyInput(const std::string& project, const std::string& snapsho
 		return false;
 	}
 
-	path_dumpcdb = snapshotPath / file_dumpcdb;
-	if (!fs::exists(path_dumpcdb)) {
-		log.logError(std::format("{} does not exist at {}", file_dumpcdb, path_dumpcdb.string()));
-		return false;
-	}
-
 	return true;
 }
 
 void Manager::readFiles(void) {
-	DumpCDBManager dumpcdbRead;
-	std::cout << "\nFile path: " << path_dumpcdb.string();
+	// Verify all files
+	if (!doesFileExist(snapshotPath, file_dumpcdb) || 
+		!doesFileExist(projectPath, file_cdb_data)
+		) {
+		log.logFatal("Problem with finding a file. Application will terminate");
+		exit(0);
+	}
+
+	// Handle dumpcdb.csv
+	fs::path path_dumpcdb = snapshotPath / file_dumpcdb;
+	log.logInfo(std::format("File path : {}", path_dumpcdb.string()));
 	dumpcdbRead.createData(path_dumpcdb.string());
+	log.blankLine();
+
+	// Handle cdb_data.h
+	fs::path path_cdb_data = projectPath / file_cdb_data;
+	log.logInfo(std::format("File path : {}", path_cdb_data.string()));
+	cdbdataRead.createData(path_cdb_data.string());
+}
+
+bool Manager::doesFileExist(const fs::path& root, const std::string& relativePath) {
+	fs::path path = root / relativePath;
+	if (!fs::exists(path)) {
+		log.logError(std::format("{} does not exist at {}", relativePath, root.string()));
+		return false;
+	}
+	return true;
 }

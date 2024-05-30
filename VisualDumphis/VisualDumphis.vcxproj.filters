@@ -45,7 +45,13 @@
     <ClCompile Include="CDBDataManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CDBData.cpp">
+    <ClCompile Include="DefineDataObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="IOMDataManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AbstractDataManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -77,7 +83,13 @@
     <ClInclude Include="CDBDataManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CDBData.h">
+    <ClInclude Include="DefineDataObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IOMDataManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AbstractDataManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
