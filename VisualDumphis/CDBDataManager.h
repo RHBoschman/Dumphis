@@ -1,18 +1,13 @@
 #pragma once
 
-#include <vector>
-#include <format>
-#include "tools\tls.h"
-#include "DefineDataObject.h"
+#include "AbstractDataManager.h"
 
 #define PRINT_ALL 0
 
-class CDBDataManager
-{
+class CDBDataManager : public AbstractDataManager {
 public:
 	CDBDataManager();
-	void createData(const std::string& path);
-	std::vector<DefineDataObject> getData(void);
+	void createData(const std::string& path) override;
 
 private:
 	tls::LogManager log;

@@ -106,11 +106,11 @@ std::string DumpCDBManager::getAfterComma(const std::string& line) {
 			text = line.substr(pos_comma + 1, (pos_semicolon - pos_comma - 1));
 		}
 		else {
-			log.logError("No ';' found");
+			log.logError("No semicolon found");
 		}
 	}
 	else {
-		log.logError("No ',' found");
+		log.logError("No comma found");
 	}
 
 	return text;
@@ -136,7 +136,7 @@ int DumpCDBManager::getDataValue(std::string& str) {
 				str = str.substr(pos_semicolon);
 			}
 			else {
-				log.logError("No ';' found");
+				log.logError("No semicolon found");
 			}
 		}
 	}

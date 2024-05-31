@@ -54,6 +54,12 @@
     <ClCompile Include="AbstractDataManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DumpHisManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DumpHis.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Manager.h">
@@ -90,6 +96,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AbstractDataManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DumpHisManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DumpHis.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

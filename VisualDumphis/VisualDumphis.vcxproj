@@ -136,6 +136,8 @@
     <ClCompile Include="CDBDataManager.cpp" />
     <ClCompile Include="DumpCDB.cpp" />
     <ClCompile Include="DumpCDBManager.cpp" />
+    <ClCompile Include="DumpHis.cpp" />
+    <ClCompile Include="DumpHisManager.cpp" />
     <ClCompile Include="IOMDataManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Manager.cpp" />
@@ -151,6 +153,8 @@
     <ClInclude Include="CDBDataManager.h" />
     <ClInclude Include="DumpCDB.h" />
     <ClInclude Include="DumpCDBManager.h" />
+    <ClInclude Include="DumpHis.h" />
+    <ClInclude Include="DumpHisManager.h" />
     <ClInclude Include="IOMDataManager.h" />
     <ClInclude Include="Manager.h" />
     <ClInclude Include="tools\file.h" />

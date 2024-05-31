@@ -8,7 +8,6 @@ void Manager::start(void) {
 	else
 		exit(0);
 
-	log.blankLine();
 	readFiles();
 }
 
@@ -64,22 +63,36 @@ bool Manager::verifyInput(const std::string& project, const std::string& snapsho
 void Manager::readFiles(void) {
 	// Verify all files
 	if (!doesFileExist(snapshotPath, file_dumpcdb) || 
-		!doesFileExist(projectPath, file_cdb_data)
+		!doesFileExist(projectPath, file_cdb_data) ||
+		!doesFileExist(projectPath, file_iom_name)
 		) {
 		log.logFatal("Problem with finding a file. Application will terminate");
 		exit(0);
 	}
 
 	// Handle dumpcdb.csv
+	log.blankLine();
 	fs::path path_dumpcdb = snapshotPath / file_dumpcdb;
 	log.logInfo(std::format("File path : {}", path_dumpcdb.string()));
 	dumpcdbRead.createData(path_dumpcdb.string());
+
+	// Handle dumphis.csv
 	log.blankLine();
+	fs::path path_dumphis = snapshotPath / file_dumphis;
+	log.logInfo(std::format("File path : {}", path_dumphis.string()));
+	dumphisRead.createData(path_dumphis.string());
 
 	// Handle cdb_data.h
+	log.blankLine();
 	fs::path path_cdb_data = projectPath / file_cdb_data;
 	log.logInfo(std::format("File path : {}", path_cdb_data.string()));
 	cdbdataRead.createData(path_cdb_data.string());
+
+	// Handle IOM_DATA.PP
+	log.blankLine();
+	fs::path path_iom_name = projectPath / file_iom_name;
+	log.logInfo(std::format("File path : {}", path_iom_name.string()));
+	iomnameRead.createData(path_iom_name.string());
 }
 
 bool Manager::doesFileExist(const fs::path& root, const std::string& relativePath) {

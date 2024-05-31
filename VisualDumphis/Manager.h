@@ -5,7 +5,9 @@
 #include <format>
 #include "tools/tls.h"
 #include "DumpCDBManager.h"
+#include "DumpHisManager.h"
 #include "CDBDataManager.h"
+#include "IOMDataManager.h"
 
 /* TODO
 * - Verify project path input
@@ -23,13 +25,17 @@ public:
 
 private:
 	DumpCDBManager dumpcdbRead;
+	DumpHisManager dumphisRead;
 	CDBDataManager cdbdataRead;
+	IOMDataManager iomnameRead;
 	tls::LogManager log;
 	tls::Gui gui;
 	fs::path projectPath;
 	fs::path snapshotPath;
 	std::string file_dumpcdb = "dumpcdb.csv";
+	std::string file_dumphis = "dumphis.csv";
 	std::string file_cdb_data = "global\\include\\cdb_data.h";
+	std::string file_iom_name = "zip_rel\\boot\\IOM_NAME.PP";
 
 	void askForInput(void);
 	bool verifyInput(const std::string& proj, const std::string& file);
