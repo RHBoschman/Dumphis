@@ -141,6 +141,8 @@
     <ClCompile Include="IOMDataManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Manager.cpp" />
+    <ClCompile Include="SourceData.cpp" />
+    <ClCompile Include="SourceDataManager.cpp" />
     <ClCompile Include="tools\file.cpp" />
     <ClCompile Include="tools\gui.cpp" />
     <ClCompile Include="tools\log.cpp" />
@@ -157,6 +159,8 @@
     <ClInclude Include="DumpHisManager.h" />
     <ClInclude Include="IOMDataManager.h" />
     <ClInclude Include="Manager.h" />
+    <ClInclude Include="SourceData.h" />
+    <ClInclude Include="SourceDataManager.h" />
     <ClInclude Include="tools\file.h" />
     <ClInclude Include="tools\gui.h" />
     <ClInclude Include="tools\log.h" />

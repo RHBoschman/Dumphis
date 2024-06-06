@@ -52,6 +52,12 @@ void DumpCDBManager::createData(const std::string& path) {
 		log.blankLine();
 	}
 #endif
+
+	createFuncIndexes();
+}
+
+std::vector<std::string> DumpCDBManager::getFuncNames(void) {
+	return funcIndexes;
 }
 
 int DumpCDBManager::getE_CDB(const std::string& line) {
@@ -153,4 +159,23 @@ int DumpCDBManager::getDataValue(std::string& str) {
 	}
 
 	return result;
+}
+
+void DumpCDBManager::createFuncIndexes(void) {
+	bool isPresent = false;
+	for (DumpCDB e : data) {
+		isPresent = false;
+		std::string name = e.getFuncName();
+		for (std::string f : funcIndexes) {
+			if (name == f) {
+				isPresent = true;
+				break;
+			}
+		}
+
+		if (!isPresent)
+			funcIndexes.push_back(name);
+	}
+
+	log.logInfo("Created list of functions");
 }

@@ -13,10 +13,12 @@ public:
 	DumpCDBManager();
 	void createData(const std::string& path);
 	std::vector<DumpCDB> getData(void);
+	std::vector<std::string> getFuncNames(void);
 
 private:
 	tls::LogManager log;
 	std::vector<DumpCDB> data;
+	std::vector<std::string> funcIndexes;
 
 	int getE_CDB(const std::string& line);
 	std::string getE_FUNCTION(const std::string& line);
@@ -24,5 +26,6 @@ private:
 	bool containsStr(const std::string& line, const std::string& str);
 	std::string getAfterComma(const std::string& line);
 	int getDataValue(std::string& str);
+	void createFuncIndexes(void);
 };
 

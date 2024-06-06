@@ -8,6 +8,7 @@
 #include "DumpHisManager.h"
 #include "CDBDataManager.h"
 #include "IOMDataManager.h"
+#include "SourceDataManager.h"
 
 /* TODO
 * - Verify project path input
@@ -28,6 +29,8 @@ private:
 	DumpHisManager dumphisRead;
 	CDBDataManager cdbdataRead;
 	IOMDataManager iomnameRead;
+	SourceDataManager sourceDataRead;
+
 	tls::LogManager log;
 	tls::Gui gui;
 	fs::path projectPath;
@@ -36,6 +39,7 @@ private:
 	std::string file_dumphis = "dumphis.csv";
 	std::string file_cdb_data = "global\\include\\cdb_data.h";
 	std::string file_iom_name = "zip_rel\\boot\\IOM_NAME.PP";
+	std::string ctlRoot = "Bachmann\\ctl";
 
 	void askForInput(void);
 	bool verifyInput(const std::string& proj, const std::string& file);

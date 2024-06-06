@@ -28,3 +28,7 @@ void DumpCDB::printData(void) {
 		std::cout << e << " ";
 	}
 }
+
+std::string DumpCDB::getFuncName(void) {
+	return funcName;
+}

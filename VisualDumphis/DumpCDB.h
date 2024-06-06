@@ -13,6 +13,7 @@ public:
 	void setFunction(const std::string& name);
 	void setConnections(const std::vector<int>& con);
 	void printData(void);
+	std::string getFuncName(void);
 
 private:
 	int id;

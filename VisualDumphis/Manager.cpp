@@ -63,8 +63,9 @@ bool Manager::verifyInput(const std::string& project, const std::string& snapsho
 void Manager::readFiles(void) {
 	// Verify all files
 	if (!doesFileExist(snapshotPath, file_dumpcdb) || 
+		!doesFileExist(snapshotPath, file_dumphis) ||
 		!doesFileExist(projectPath, file_cdb_data) ||
-		!doesFileExist(projectPath, file_iom_name)
+		!doesFileExist(projectPath, file_iom_name) 
 		) {
 		log.logFatal("Problem with finding a file. Application will terminate");
 		exit(0);
@@ -93,6 +94,11 @@ void Manager::readFiles(void) {
 	fs::path path_iom_name = projectPath / file_iom_name;
 	log.logInfo(std::format("File path : {}", path_iom_name.string()));
 	iomnameRead.createData(path_iom_name.string());
+
+	// Get further data from source files
+	log.blankLine();
+	fs::path projectCtl = projectPath / ctlRoot;
+	sourceDataRead.createData(projectCtl, dumpcdbRead.getFuncNames());
 }
 
 bool Manager::doesFileExist(const fs::path& root, const std::string& relativePath) {
