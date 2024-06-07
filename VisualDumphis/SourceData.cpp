@@ -22,10 +22,13 @@ void SourceData::printData(void) {
 	//std::cout << "\nFile path: " << filePath;
 	std::cout << "\nCmnds:";
 	for (CMND e : cmnds) {
+		for (FALL_CMND f : e.fallCmnds) {
+			std::cout << "\n\tFALL: " << f.name;
+		}
 		std::cout << "\n\tCMND: " << e.name;
 		std::cout << "\n\tSteps:";
-		for (STEP f : e.steps) {
-			std::cout << "\n\t\tSTEP: " << f.name;
+		for (STEP d : e.steps) {
+			std::cout << "\n\t\tSTEP: " << d.name;
 		}
 	}
 }

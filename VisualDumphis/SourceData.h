@@ -8,9 +8,16 @@ struct STEP {
 	std::string name = "";
 };
 
+struct FALL_CMND {
+	std::string name = "";
+	int CmndIndex = -1;
+};
+
 struct CMND {
 	std::string name = "";
 	std::vector<STEP> steps;
+	std::vector<FALL_CMND> fallCmnds;
+	int CmndIndex = -1;
 };
 
 class SourceData {

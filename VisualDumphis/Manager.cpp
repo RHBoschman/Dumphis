@@ -9,6 +9,8 @@ void Manager::start(void) {
 		exit(0);
 
 	readFiles();
+
+	log.logInfo("Done retreiving data");
 }
 
 void Manager::askForInput(void) {

@@ -9,7 +9,7 @@
 #include "SourceData.h"
 
 #define MAX_FIND_ITERATIONS 3
-#define PRINT_ALL 1
+#define PRINT_ALL 0
 
 namespace fs = std::filesystem;
 

@@ -1,12 +1,17 @@
 #include "SourceDataManager.h"
 
 
-//TODO: 
-// - Trim result getContentInBrackets()
-// - ContainsStr specifiek naar één woord laten zoeken (Dus CMND en FALLCMND apart)
-// - FALLCMND moet eigenlijk worden afgehandeld zoals volgende CMND afgehandeld wordt (hoe?, moet een soort pending state krijgen)
-// - Betere afwerking met haken (gaat nog niet goed met uitlezen)
-// - Hij crasht uiteindelijk ook nog.
+/* TODO: 
+* - Find CMND indexes (because I have the cmnd names (from files) 
+* and I have the cmnd index (CDB data), but not the connection between the two)
+* 
+* Steps:
+* - Find every .H/.h etc file for every function (the same way)
+* - In the file, loop through all CMND and FALL_CMND names and look for match
+* - If there is a match, add the index to SourceData structure. 
+* - Verify (in the end) if all CMND/FALL_CMND have an index.
+* - Some dont? Calculate loss.
+*/
 
 SourceDataManager::SourceDataManager() : log("SourceDataManager") {}
 
@@ -110,11 +115,20 @@ void SourceDataManager::parseFile(const fs::path& p, SourceData& element) {
 	std::string line;
 	bool inElement = false;
 	CMND tmp;
+	std::vector<FALL_CMND> fallCmnds;
 
 	while (file.readLine2(line)) {
-		if (containsStr(line, "CMND") && !containsStr(line, "ENDCMND")) {
+		if (containsStr(line, "FALL_CMND")) {
+			FALL_CMND fallCmnd;
+			fallCmnd.name = getContentInBrackets(line);
+			fallCmnds.push_back(fallCmnd);
+		}
+
+		if (containsStr(line, "CMND")) {
 			inElement = true;
 			tmp.name = getContentInBrackets(line);
+			tmp.fallCmnds = fallCmnds;
+			fallCmnds.clear();
 		}
 
 		if (inElement) {
@@ -135,29 +149,63 @@ void SourceDataManager::parseFile(const fs::path& p, SourceData& element) {
 			CMND cmnd;
 			cmnd = tmp;
 			element.addCmnd(cmnd);
+			
+			// Clear tmp
+			tmp.name = "";
+			tmp.steps.clear();
 		}
 	}
+
+	if (!fallCmnds.empty())
+		log.logError("FALL_CMNDs not connected to CMND");
 }
 
 bool SourceDataManager::containsStr(const std::string& line, const std::string& str) {
-	if (line.find(str) != std::string::npos)
-		return true;
+	std::string tmp = "*" + line + "*";
+	size_t pos = tmp.find(str);
+	if (pos != std::string::npos) {
+		if (!std::isalpha(tmp[pos - 1]) && 
+			!std::isalpha(tmp[pos + str.length()]) &&
+			tmp[pos - 1] != '_' &&
+			tmp[pos + str.length()] != '_'
+			)
+			return true;
+	}
 	return false;
 }
 
 std::string SourceDataManager::getContentInBrackets(const std::string& line) {
 	std::string result = "";
-	size_t pos_bracketOpen = line.find('(');
-	size_t pos_bracketClose = 0;
-	if (pos_bracketOpen != std::string::npos) {
-		pos_bracketClose = line.find(')', pos_bracketOpen + 1);
+	size_t pos_bracketOpen = 0;
+	size_t pos_bracketClose = 1;
+	int n_toIgnore = 0;
+	bool closingFound = false;
 
-		result = line.substr((pos_bracketOpen + 1), (pos_bracketClose - pos_bracketOpen - 1));
-	}
-	else {
-		log.logError("Did not find an opening bracket");
+	for (int i = 0; i < line.size(); i++) {
+		char c = line[i];
+		if (c == '(') {
+			n_toIgnore++;
+			pos_bracketOpen = i;
+		}
+		else if (c == ')') {
+			n_toIgnore--;
+			closingFound = true;
+			pos_bracketClose = i;
+		}
+
+		if (n_toIgnore == 0 && closingFound) {
+			result = line.substr((pos_bracketOpen + 1), (pos_bracketClose - pos_bracketOpen - 1));
+			break;
+		}
 	}
 
+	if (result.empty() || n_toIgnore != 0 || !closingFound) {
+		log.logError("Error finding content in brackets");
+		return "";
+	}
+
+	std::string::iterator end_pos = std::remove(result.begin(), result.end(), ' ');
+	result.erase(end_pos, result.end());
 
 	return result;
 }
