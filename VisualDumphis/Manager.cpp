@@ -100,7 +100,7 @@ void Manager::readFiles(void) {
 	// Get further data from source files
 	log.blankLine();
 	fs::path projectCtl = projectPath / ctlRoot;
-	sourceDataRead.createData(projectCtl, dumpcdbRead.getFuncNames());
+	sourceDataRead.createSourceData(projectCtl, dumpcdbRead.getFuncNames());
 }
 
 bool Manager::doesFileExist(const fs::path& root, const std::string& relativePath) {

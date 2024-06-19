@@ -1,21 +1,13 @@
 #include "SourceDataManager.h"
 
 
-/* TODO: 
-* - Find CMND indexes (because I have the cmnd names (from files) 
-* and I have the cmnd index (CDB data), but not the connection between the two)
-* 
-* Steps:
-* - Find every .H/.h etc file for every function (the same way)
-* - In the file, loop through all CMND and FALL_CMND names and look for match
-* - If there is a match, add the index to SourceData structure. 
-* - Verify (in the end) if all CMND/FALL_CMND have an index.
-* - Some dont? Calculate loss.
-*/
+// TODO:  
+// -  Check whether #define is in /* */ block in parseHFile()
 
 SourceDataManager::SourceDataManager() : log("SourceDataManager") {}
+void SourceDataManager::createData(const std::string& path) {}
 
-void SourceDataManager::createData(const fs::path& path, const std::vector<std::string>& functions) {
+void SourceDataManager::createSourceData(const fs::path& path, const std::vector<std::string>& functions) {
 	rootPath = path;
 	funcNames = functions;
 
@@ -24,28 +16,28 @@ void SourceDataManager::createData(const fs::path& path, const std::vector<std::
 		exit(0);
 	}
 
+	// Find source data by parsing .c/.cpp files
 	log.logInfo("Searching in source files...");
 	log.logInfo(std::format("Number of functions: {}", functions.size()));
 	log.logInfo("Searching on extensions: ");
-	for (std::string e : extensions) {
+	for (std::string e : extensionsC) {
 		log.logNoNl(e);
 		log.logNoNl(" ");
 	}
 
 	int n_found = 0, n_notFound = 0, total;
 	for (size_t i = 0; i < funcNames.size(); i++) {
-
 		SourceData element;
 		element.setFuncIndex(i);
 
 		// Find func.c / .C / .cpp / .CPP
 		std::string CFileName = funcNames[i];
-		fs::path CFilePath = findFile(CFileName);
+		fs::path CFilePath = findFile(CFileName, extensionsC);
 		if (!CFilePath.empty()) {
 			n_found++;
 			element.setFoundFunction();
 			element.setFilePath(CFilePath.string());
-			parseFile(CFilePath, element);
+			parseCFile(CFilePath, element);
 		}
 		else {
 			log.logError(std::format("Could not find a source file for {}", CFileName));
@@ -67,8 +59,76 @@ void SourceDataManager::createData(const fs::path& path, const std::vector<std::
 	log.logInfo(std::format("Found {} files", n_found));
 	log.logInfo(std::format("Could not find {} files", n_notFound));
 	total = n_found + n_notFound;
-	float loss = ((float)n_notFound / (float)total) * 100;
+	float loss = ((float)n_notFound / (float)total) * 100.0f;
 	log.logInfo(std::format("Total: {}, loss: {}%", total, std::round(loss)));
+
+
+	// Find cmnd indexes by parsing .h files
+	log.logInfo("Searching in header files...");
+	log.logInfo(std::format("Number of functions: {}", functions.size()));
+	log.logInfo("Searching on extensions: ");
+	for (std::string e : extensionsH) {
+		log.logNoNl(e);
+		log.logNoNl(" ");
+	}
+
+	n_found = 0, n_notFound = 0, total = 0;
+	for (size_t i = 0; i < data.size(); i++) {
+		// Find func.h / .H / .hpp / .HPP
+
+		// SOMETHING IS NOT RIGHT HERE
+		// The program should seek for a file called function.h only. So it 
+		// should take the function index from the SourceData object and resolve the functionname.
+		// BUT (TODO): every function will create a SourceData object, but not every SourceData object has CMNDS etc. 
+		// So seek .h files only for data objects that actually have data (cmnds)
+		// So: (hasCmnds() must be implemented)
+
+		// if (data[i].hasCmnds()) {
+		std::string HFileName = funcNames[data[i].getFuncIndex()];
+		fs::path HFilePath = findFile(HFileName, extensionsH);
+
+		if (!HFilePath.empty()) {
+			n_found++;
+			parseHFile(HFilePath, data[i]);
+		}
+		else {
+			log.logError(std::format("Could not find a source file for {}", HFileName));
+			n_notFound++;
+		}
+		// }
+	}
+
+	log.logInfo(std::format("Found {} files", n_found));
+	log.logInfo(std::format("Could not find {} files", n_notFound));
+	total = n_found + n_notFound;
+	loss = ((float)n_notFound / (float)total) * 100.0f;
+	log.logInfo(std::format("Total: {}, loss: {}%", total, std::round(loss)));
+
+	// Check if all cmnd indexes are found
+	int n_cmndFound = 0, n_cmndNotFound = 0;
+	for (SourceData e : data) {
+		std::vector<CMND> cmnds = e.getCMNDs();
+		for (CMND f : cmnds) {
+			if (f.CmndIndex > -1)
+				n_cmndFound++;
+			else
+				n_cmndNotFound++;
+
+			for (FALL_CMND g : f.fallCmnds) {
+				if (g.CmndIndex > -1)
+					n_cmndFound++;
+				else
+					n_cmndNotFound++;
+			}
+		}
+	}
+
+	log.logInfo(std::format("Found {} indexes for (FALL_)CMNDs", n_cmndFound));
+	log.logInfo(std::format("Could not find {} indexes", n_cmndNotFound));
+	int totalCmnds = n_cmndFound + n_cmndNotFound;
+	loss = ((float)n_cmndNotFound / (float)totalCmnds) * 100.0f;
+	log.logInfo(std::format("Total: {}, loss: {}%", total, std::round(loss)));
+
 
 #if PRINT_ALL
 	for (SourceData e : data) {
@@ -79,12 +139,12 @@ void SourceDataManager::createData(const fs::path& path, const std::vector<std::
 #endif
 }
 
-fs::path SourceDataManager::findFile(std::string file) {
+fs::path SourceDataManager::findFile(std::string file, std::vector<std::string>& exts) {
 	for (int i = 0; i < MAX_FIND_ITERATIONS; i++) {
 		try {
 			for (const auto& entry : fs::recursive_directory_iterator(rootPath)) {
 				if (entry.is_regular_file()) {
-					for (const std::string e : extensions) {
+					for (const std::string e : exts) {
 						if (entry.path().filename() == file + e) {
 							return entry.path(); // Stop searching
 						}
@@ -110,7 +170,7 @@ fs::path SourceDataManager::findFile(std::string file) {
 	return "";
 }
 
-void SourceDataManager::parseFile(const fs::path& p, SourceData& element) {
+void SourceDataManager::parseCFile(const fs::path& p, SourceData& element) {
 	tls::File file(p.string());
 	std::string line;
 	bool inElement = false;
@@ -160,6 +220,36 @@ void SourceDataManager::parseFile(const fs::path& p, SourceData& element) {
 		log.logError("FALL_CMNDs not connected to CMND");
 }
 
+void SourceDataManager::parseHFile(const fs::path& p, SourceData& element) {
+	tls::File file(p.string());
+	std::string line;
+	std::vector<CMND> cmnds = element.getCMNDs();
+
+	while (file.readLine2(line)) {
+		// Check whether #define is in /* */ block...
+
+		for (size_t i = 0; i < cmnds.size(); i++) {
+			bool fallCmndFound = false;
+
+			if (containsStr(line, cmnds[i].name) && containsStr(line, "#define") && !isComment(line)) {
+				element.setCmndIndex(i, findDefineIndex(line));
+				break; // Corresponding cmnd is found, so skip to next line
+			}
+
+			for (size_t j = 0; j < cmnds[i].fallCmnds.size(); j++) {
+				if (containsStr(line, cmnds[i].fallCmnds[j].name) && containsStr(line, "#define") && !isComment(line)) {
+					element.setFallCmndIndex(i, j, findDefineIndex(line));
+					fallCmndFound = true;
+					break;
+				}
+			}
+			
+			if (fallCmndFound)
+				break; // Corresponding fall cmnd is found, so skip to next line
+		}
+	}
+}
+
 bool SourceDataManager::containsStr(const std::string& line, const std::string& str) {
 	std::string tmp = "*" + line + "*";
 	size_t pos = tmp.find(str);
@@ -206,6 +296,46 @@ std::string SourceDataManager::getContentInBrackets(const std::string& line) {
 
 	std::string::iterator end_pos = std::remove(result.begin(), result.end(), ' ');
 	result.erase(end_pos, result.end());
+
+	return result;
+}
+
+int SourceDataManager::findDefineIndex(const std::string& str) {
+	std::string define = "#define";
+	size_t pos_define = str.find(define);
+
+	if (pos_define != std::string::npos) {
+		std::string substr = str.substr((pos_define + define.length() + 1));
+
+		DefineDataObject ddo;
+		ddo.setName(getName(substr)); // Not used but necesary to strip string for getting the number
+		ddo.setValue(getNumber(substr));
+
+		return ddo.getValue();
+	}
+	else {
+		log.logError("'#define' not found");
+		return -1;
+	}
+}
+
+bool SourceDataManager::isComment(const std::string& line) {
+	// This check is not complete: it can't know whether text is in a /* */ block!
+	bool result = false;
+
+	for (int i = 0; i < line.size(); i++) {
+		char c = line[i];
+		if (c >= 33 && c <= 126) { // ASCII readable characters
+			if (c == '/') {
+				if (line[i + 1] == '/' || line[i + 1] == '*') {
+					result = true;
+				}
+			}
+			else if (c == '*') {
+				result = true;
+			}
+		}
+	}
 
 	return result;
 }

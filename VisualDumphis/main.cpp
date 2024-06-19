@@ -8,7 +8,7 @@
 * Later:
 * - Unit parents (I already know its childeren, but parents is more difficult)
 * - Possible outputs for Step (need to parse with function file parsing (SourceDataManager.cpp)
-* - View code (will be part of javascript's code
+* - View code (will be part of javascript's code)
 * 
 * The rest:
 * - Place data into JSON or XML format for further handling with JS

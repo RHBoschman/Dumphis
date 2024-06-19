@@ -25,9 +25,12 @@ public:
 	void setFoundFunction(void);
 	void setFuncIndex(const int index);
 	void setFilePath(const std::string& path);
+	void setCmndIndex(const int i, const int index);
+	void setFallCmndIndex(const int i, const int j,const int index);
 	void addCmnd(const CMND cmnd);
 	void printData(void);
 	int getFuncIndex(void) const;
+	std::vector<CMND> getCMNDs(void);
 
 private:
 	bool foundFunction = false;
