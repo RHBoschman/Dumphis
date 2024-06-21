@@ -9,6 +9,7 @@
 #include "CDBDataManager.h"
 #include "IOMDataManager.h"
 #include "SourceDataManager.h"
+#include "PrepareDataManager.h"
 
 /* TODO
 * - Verify project path input
@@ -30,6 +31,7 @@ private:
 	CDBDataManager cdbdataRead;
 	IOMDataManager iomnameRead;
 	SourceDataManager sourceDataRead;
+	PrepareDataManager prepareData;
 
 	tls::LogManager log;
 	tls::Gui gui;

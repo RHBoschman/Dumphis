@@ -2,7 +2,8 @@
 
 
 // TODO:  
-// -  Check whether #define is in /* */ block in parseHFile()
+// -  Check whether #define is in /* */ block in parseHFile() ?? maybe ignore this for now
+// -  Check output because indexing is still not quite right
 
 SourceDataManager::SourceDataManager() : log("SourceDataManager") {}
 void SourceDataManager::createData(const std::string& path) {}
@@ -76,26 +77,19 @@ void SourceDataManager::createSourceData(const fs::path& path, const std::vector
 	for (size_t i = 0; i < data.size(); i++) {
 		// Find func.h / .H / .hpp / .HPP
 
-		// SOMETHING IS NOT RIGHT HERE
-		// The program should seek for a file called function.h only. So it 
-		// should take the function index from the SourceData object and resolve the functionname.
-		// BUT (TODO): every function will create a SourceData object, but not every SourceData object has CMNDS etc. 
-		// So seek .h files only for data objects that actually have data (cmnds)
-		// So: (hasCmnds() must be implemented)
+		if (data[i].hasCMNDs()) {
+			std::string HFileName = funcNames[data[i].getFuncIndex()];
+			fs::path HFilePath = findFile(HFileName, extensionsH);
 
-		// if (data[i].hasCmnds()) {
-		std::string HFileName = funcNames[data[i].getFuncIndex()];
-		fs::path HFilePath = findFile(HFileName, extensionsH);
-
-		if (!HFilePath.empty()) {
-			n_found++;
-			parseHFile(HFilePath, data[i]);
+			if (!HFilePath.empty()) {
+				n_found++;
+				parseHFile(HFilePath, data[i]);
+			}
+			else {
+				log.logError(std::format("Could not find a source file for {}", HFileName));
+				n_notFound++;
+			}
 		}
-		else {
-			log.logError(std::format("Could not find a source file for {}", HFileName));
-			n_notFound++;
-		}
-		// }
 	}
 
 	log.logInfo(std::format("Found {} files", n_found));
@@ -125,10 +119,9 @@ void SourceDataManager::createSourceData(const fs::path& path, const std::vector
 
 	log.logInfo(std::format("Found {} indexes for (FALL_)CMNDs", n_cmndFound));
 	log.logInfo(std::format("Could not find {} indexes", n_cmndNotFound));
-	int totalCmnds = n_cmndFound + n_cmndNotFound;
-	loss = ((float)n_cmndNotFound / (float)totalCmnds) * 100.0f;
+	total = n_cmndFound + n_cmndNotFound;
+	loss = ((float)n_cmndNotFound / (float)total) * 100.0f;
 	log.logInfo(std::format("Total: {}, loss: {}%", total, std::round(loss)));
-
 
 #if PRINT_ALL
 	for (SourceData e : data) {
@@ -137,6 +130,10 @@ void SourceDataManager::createSourceData(const fs::path& path, const std::vector
 		log.blankLine();
 	}
 #endif
+}
+
+std::vector<SourceData>* SourceDataManager::getData(void) {
+	return &data;
 }
 
 fs::path SourceDataManager::findFile(std::string file, std::vector<std::string>& exts) {
@@ -231,13 +228,13 @@ void SourceDataManager::parseHFile(const fs::path& p, SourceData& element) {
 		for (size_t i = 0; i < cmnds.size(); i++) {
 			bool fallCmndFound = false;
 
-			if (containsStr(line, cmnds[i].name) && containsStr(line, "#define") && !isComment(line)) {
+			if (containsStr(line, "#define " + cmnds[i].name) && !isComment(line)) {
 				element.setCmndIndex(i, findDefineIndex(line));
 				break; // Corresponding cmnd is found, so skip to next line
 			}
 
 			for (size_t j = 0; j < cmnds[i].fallCmnds.size(); j++) {
-				if (containsStr(line, cmnds[i].fallCmnds[j].name) && containsStr(line, "#define") && !isComment(line)) {
+				if (containsStr(line, "#define " + cmnds[i].fallCmnds[j].name) && !isComment(line)) {
 					element.setFallCmndIndex(i, j, findDefineIndex(line));
 					fallCmndFound = true;
 					break;
@@ -334,6 +331,7 @@ bool SourceDataManager::isComment(const std::string& line) {
 			else if (c == '*') {
 				result = true;
 			}
+			break; // Stop checking when a readable char was found
 		}
 	}
 

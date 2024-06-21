@@ -19,6 +19,7 @@ public:
 	SourceDataManager();
 	void createData(const std::string& path) override; // Needed to make sure class is not abstract
 	void createSourceData(const fs::path& path, const std::vector<std::string>& functions);
+	std::vector<SourceData>* getData(void);
 
 private:
 	tls::LogManager log;

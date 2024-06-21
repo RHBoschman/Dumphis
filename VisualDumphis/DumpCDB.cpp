@@ -32,3 +32,15 @@ void DumpCDB::printData(void) {
 std::string DumpCDB::getFuncName(void) {
 	return funcName;
 }
+
+int DumpCDB::getId(void) const {
+	return id;
+}
+
+int DumpCDB::getNcmnds(void) const {
+	return n_cmds;
+}
+
+std::vector<int> DumpCDB::getDataCons(void) const {
+	return dataConnections;
+}

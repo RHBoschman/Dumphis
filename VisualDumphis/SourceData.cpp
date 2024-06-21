@@ -31,9 +31,9 @@ void SourceData::printData(void) {
 	std::cout << "\nCmnds:";
 	for (CMND e : cmnds) {
 		for (FALL_CMND f : e.fallCmnds) {
-			std::cout << "\n\tFALL: " << f.name;
+			std::cout << "\n\tFALL: " << f.name << " (" << f.CmndIndex << ")";
 		}
-		std::cout << "\n\tCMND: " << e.name;
+		std::cout << "\n\tCMND: " << e.name << " (" << e.CmndIndex << ")";
 		std::cout << "\n\tSteps:";
 		for (STEP d : e.steps) {
 			std::cout << "\n\t\tSTEP: " << d.name;
@@ -41,10 +41,22 @@ void SourceData::printData(void) {
 	}
 }
 
-int SourceData::getFuncIndex(void) const {
-	return funcIndex;
+bool SourceData::hasCMNDs(void) {
+	return !cmnds.empty();
 }
 
 std::vector<CMND> SourceData::getCMNDs(void) {
 	return cmnds;
+}
+
+bool SourceData::getFoundFunction(void) const {
+	return foundFunction;
+}
+
+int SourceData::getFuncIndex(void) const {
+	return funcIndex;
+}
+
+std::string SourceData::getFilePath(void) const {
+	return filePath;
 }

@@ -14,6 +14,9 @@ public:
 	void setConnections(const std::vector<int>& con);
 	void printData(void);
 	std::string getFuncName(void);
+	int getId(void) const;
+	int getNcmnds(void) const;
+	std::vector<int> getDataCons(void) const;
 
 private:
 	int id;

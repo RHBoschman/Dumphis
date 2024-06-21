@@ -66,6 +66,9 @@
     <ClCompile Include="SourceData.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PrepareDataManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Manager.h">
@@ -114,6 +117,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SourceData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UnitInfoData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PrepareDataManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

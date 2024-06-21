@@ -9,8 +9,12 @@ void Manager::start(void) {
 		exit(0);
 
 	readFiles();
-
 	log.logInfo("Done retreiving data");
+
+	log.logInfo("Preparing data...");
+	prepareData.createData(dumpcdbRead.getData(), cdbdataRead.getData(), sourceDataRead.getData());
+
+	//log.logInfo("Exporting data...); <<< to be implemented later
 }
 
 void Manager::askForInput(void) {

@@ -29,12 +29,15 @@ public:
 	void setFallCmndIndex(const int i, const int j,const int index);
 	void addCmnd(const CMND cmnd);
 	void printData(void);
-	int getFuncIndex(void) const;
+	bool hasCMNDs(void);
 	std::vector<CMND> getCMNDs(void);
+	bool getFoundFunction(void) const;
+	int getFuncIndex(void) const;
+	std::string getFilePath(void) const;
 
 private:
 	bool foundFunction = false;
-	int funcIndex = 0;
+	int funcIndex = -1;
 	std::vector<CMND> cmnds;
 	std::string filePath = "";
 };

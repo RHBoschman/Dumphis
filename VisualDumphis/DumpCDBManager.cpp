@@ -56,6 +56,10 @@ void DumpCDBManager::createData(const std::string& path) {
 	createFuncIndexes();
 }
 
+std::vector<DumpCDB>* DumpCDBManager::getData(void) {
+	return &data;
+}
+
 std::vector<std::string> DumpCDBManager::getFuncNames(void) {
 	return funcIndexes;
 }

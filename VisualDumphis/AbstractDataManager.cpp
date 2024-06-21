@@ -3,8 +3,8 @@
 
 AbstractDataManager::AbstractDataManager() : log("AbstractDataManager") {}
 
-std::vector<DefineDataObject> AbstractDataManager::getData(void) {
-	return data;
+std::vector<DefineDataObject>* AbstractDataManager::getData(void) {
+	return &data;
 }
 
 bool AbstractDataManager::containsStr(const std::string& line, const std::string& str) {
@@ -28,17 +28,18 @@ std::string AbstractDataManager::getName(std::string& str) {
 	return result;
 }
 
-unsigned int AbstractDataManager::getNumber(std::string& str) {
+int AbstractDataManager::getNumber(std::string& str) {
 	std::string::iterator end_pos = std::remove(str.begin(), str.end(), ' ');
 	str.erase(end_pos, str.end());
 
-	unsigned int result;
+	int result = -1;
 	try {
 		result = std::stoi(str);
 	}
 	catch (std::exception& e) {
-		log.logFatal(std::format("Converting define value {} to int went wrong: {}", str, e.what()));
-		exit(0);
+		log.logError(std::format("Converting define value {} to int went wrong: {}", str, e.what()));
+		//log.logFatal(std::format("Converting define value {} to int went wrong: {}", str, e.what()));
+		//exit(0);
 	}
 
 	return result;

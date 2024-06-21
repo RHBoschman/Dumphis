@@ -13,6 +13,6 @@ private:
 	tls::LogManager log;
 
 	std::string getName(std::string& str) override;
-	unsigned int getNumber(std::string& str) override;
+	int getNumber(std::string& str) override;
 };
 

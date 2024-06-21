@@ -50,8 +50,8 @@ std::string IOMDataManager::getName(std::string& str) {
 	return result;
 }
 
-unsigned int IOMDataManager::getNumber(std::string& str) {
-	unsigned int result = (~0);
+int IOMDataManager::getNumber(std::string& str) {
+	int result = (~0);
 	std::string resText = "";
 
 	size_t pos_comma = str.find(',');

@@ -2,8 +2,8 @@
 #include "tools/tls.h"
 
 /* TODO:
-* About retrieving data:
-* - Linkage between CMND name and index (see SourceDataManager.cpp)
+* Preparing JSON/XML data:
+* - See PrepareDataManger.cpp
 * 
 * Later:
 * - Unit parents (I already know its childeren, but parents is more difficult)

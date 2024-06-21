@@ -141,6 +141,7 @@
     <ClCompile Include="IOMDataManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Manager.cpp" />
+    <ClCompile Include="PrepareDataManager.cpp" />
     <ClCompile Include="SourceData.cpp" />
     <ClCompile Include="SourceDataManager.cpp" />
     <ClCompile Include="tools\file.cpp" />
@@ -159,6 +160,7 @@
     <ClInclude Include="DumpHisManager.h" />
     <ClInclude Include="IOMDataManager.h" />
     <ClInclude Include="Manager.h" />
+    <ClInclude Include="PrepareDataManager.h" />
     <ClInclude Include="SourceData.h" />
     <ClInclude Include="SourceDataManager.h" />
     <ClInclude Include="tools\file.h" />
@@ -166,6 +168,7 @@
     <ClInclude Include="tools\log.h" />
     <ClInclude Include="tools\time.h" />
     <ClInclude Include="tools\tls.h" />
+    <ClInclude Include="UnitInfoData.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

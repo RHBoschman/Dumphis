@@ -12,7 +12,7 @@ class DumpCDBManager {
 public:
 	DumpCDBManager();
 	void createData(const std::string& path);
-	std::vector<DumpCDB> getData(void);
+	std::vector<DumpCDB>* getData(void);
 	std::vector<std::string> getFuncNames(void);
 
 private:
