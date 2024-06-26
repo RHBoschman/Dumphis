@@ -32,6 +32,10 @@ void DumpHisManager::createData(const std::string& path) {
 #endif
 }
 
+std::vector<DumpHis>* DumpHisManager::getData(void) {
+	return &data;
+}
+
 std::string DumpHisManager::readTime(std::string& str) {
 	std::string result, trash;
 	size_t pos = readUntilComma(str, result);

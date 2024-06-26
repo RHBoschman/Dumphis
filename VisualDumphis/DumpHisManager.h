@@ -12,7 +12,7 @@ class DumpHisManager
 public:
 	DumpHisManager();
 	void createData(const std::string& path);
-	//std::vector<DumpCDB> getData(void);
+	std::vector<DumpHis>* getData(void);
 
 private:
 	tls::LogManager log;

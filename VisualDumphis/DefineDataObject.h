@@ -3,8 +3,7 @@
 #include <string>
 #include <iostream>
 
-class DefineDataObject
-{
+class DefineDataObject {
 public:
 	void setName(const std::string& nm);
 	void setValue(const unsigned int val);

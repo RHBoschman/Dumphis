@@ -11,12 +11,6 @@
 #include "SourceDataManager.h"
 #include "PrepareDataManager.h"
 
-/* TODO
-* - Verify project path input
-* - Find and parse cdb_data.h
-* - Create data with CDBDataManger (as CDBData objects)
-*/
-
 namespace fs = std::filesystem;
 
 class Manager
@@ -47,5 +41,6 @@ private:
 	bool verifyInput(const std::string& proj, const std::string& file);
 	void readFiles(void);
 	bool doesFileExist(const fs::path& root, const std::string& relativePath);
+	void exportFiles(void);
 };
 

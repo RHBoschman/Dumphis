@@ -125,5 +125,8 @@
     <ClInclude Include="PrepareDataManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="FunctionData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

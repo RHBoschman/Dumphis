@@ -158,6 +158,7 @@
     <ClInclude Include="DumpCDBManager.h" />
     <ClInclude Include="DumpHis.h" />
     <ClInclude Include="DumpHisManager.h" />
+    <ClInclude Include="FunctionData.h" />
     <ClInclude Include="IOMDataManager.h" />
     <ClInclude Include="Manager.h" />
     <ClInclude Include="PrepareDataManager.h" />

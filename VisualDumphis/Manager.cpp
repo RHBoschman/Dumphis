@@ -12,9 +12,10 @@ void Manager::start(void) {
 	log.logInfo("Done retreiving data");
 
 	log.logInfo("Preparing data...");
-	prepareData.createData(dumpcdbRead.getData(), cdbdataRead.getData(), sourceDataRead.getData());
+	prepareData.createData(dumpcdbRead.getData(), dumpcdbRead.getFuncNames(), cdbdataRead.getData(), sourceDataRead.getData());
 
-	//log.logInfo("Exporting data...); <<< to be implemented later
+	log.logInfo("Exporting data...");
+
 }
 
 void Manager::askForInput(void) {
@@ -114,4 +115,14 @@ bool Manager::doesFileExist(const fs::path& root, const std::string& relativePat
 		return false;
 	}
 	return true;
+}
+
+void Manager::exportFiles(void) {
+	// The 4 data structures to be exported
+	std::vector<UnitInfoDataObject>* unitInfoData = prepareData.getUnitInfoData();
+	std::vector<FunctionDataObject>* functionData = prepareData.getFunctionData();
+	std::vector<DumpHis>* dumpHisData = dumphisRead.getData();
+	std::vector<DefineDataObject>* iomData = iomnameRead.getData();
+
+	// Export to XML or JSON
 }

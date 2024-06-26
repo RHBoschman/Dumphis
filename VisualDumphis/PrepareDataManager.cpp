@@ -13,30 +13,14 @@ void PrepareDataManager::createData(
 	sourceData = _sourceData;
 	funcNames = _funcNames;
 
-	/* NOTE: Code below is NOT right! Whole idea of creating data needs to be different!
-	* - What is wrong:
-	* I wanted 3 export files: dumphis, iom, unit info. Unit info would contain all function data.
-	* BUT: multiple units can (and do) use the SAME function. So, that would result in A LOT
-	* of double data. Code below is old and needs to be changed to new approach.
-	* 
-	* - New approach:
-	* Create 4 export files: dumphis, iom, unit info (just with a reference to the function with an id) 
-	* and functions (including the reference id). SEE NOTE BOOK PAPER.
-	* Probably, the code below can be changed slightly to only hold function data instead of unit data.
-	* There should, however, be a separate file called FunctionData.h (like UnitInfoData.h).
-	* UnitInfoData.h should also be changed so it only contains the info needed (so without func things, 
-	* except it's reference).
-	* 
-	* In the end, PrepareDataManager should have two 'get' functions, one for unit info and one for function.
-	* The other two export files will be retrieved in Manager.cpp directly, since there is no need to change the data.
-	*/
-
+	// Creating data for function export file
 	for (SourceData e : *sourceData) {
-		UnitInfoDataObject element;
-		element.foundFunc = e.getFoundFunction();
+		FunctionDataObject element;
+		element.found = e.getFoundFunction();
 		element.filePath = e.getFilePath();
 		int funcIndex = e.getFuncIndex();
-		element.funcName = (funcIndex >= 0) ? funcNames[funcIndex] : "unknown";
+		element.funcId = funcIndex;
+		element.name = (funcIndex >= 0) ? funcNames[funcIndex] : "unknown";
 
 		for (CMND c : e.getCMNDs()) {
 			Cmnd cmnd;
@@ -59,13 +43,45 @@ void PrepareDataManager::createData(
 
 			element.cmnds.push_back(cmnd);
 		}
+		functionData.push_back(element);
+	}
 
-		for (DumpCDB dcdb : *dumpCDBdata) {
-			if (dcdb.getFuncName() == element.funcName) {
-				element.id = dcdb.getId();
-				element.n_cmnds = dcdb.getNcmnds();
-				element.dataConnections = dcdb.getDataCons();
+	// Creating data for unit info export file
+	for (DumpCDB dcdb : *dumpCDBdata) {
+		UnitInfoDataObject element;
+		element.id = dcdb.getId();
+		element.n_cmnds = dcdb.getNcmnds();
+		element.dataConnections = dcdb.getDataCons();
+
+		for (int i = 0; i < funcNames.size(); i++) {
+			if (funcNames[i] == dcdb.getFuncName()) {
+				element.funcId = i;
+				break;
 			}
 		}
+
+		for (DefineDataObject e : *unitNames) {
+			if (e.getValue() == dcdb.getId()) {
+				element.name = e.getName();
+				break;
+			}
+		}
+
+		if (element.name[0] == 'E')
+			element.type = ENTITY;
+		else if (element.name[0] == 'U')
+			element.type = UNIT;
+
+		unitInfoData.push_back(element);
 	}
+
+	log.logInfo("Done preparing data");
+}
+
+std::vector<UnitInfoDataObject>* PrepareDataManager::getUnitInfoData(void) {
+	return &unitInfoData;
+}
+
+std::vector<FunctionDataObject>* PrepareDataManager::getFunctionData(void) {
+	return &functionData;
 }
