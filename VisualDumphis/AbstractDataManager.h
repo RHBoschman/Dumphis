@@ -18,6 +18,7 @@ protected:
 	bool containsStr(const std::string& line, const std::string& str);
 	virtual std::string getName(std::string& str);
 	virtual int getNumber(std::string& str);
+	void removeTabs(std::string& str);
 
 private:
 	tls::LogManager log;

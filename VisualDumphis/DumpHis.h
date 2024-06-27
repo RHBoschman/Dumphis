@@ -13,6 +13,12 @@ public:
 	void setState(const int n);
 	void setAlarmId(const int n);
 	void printData(void);
+	std::string getTime(void) const;
+	int getUnitId(void) const;
+	int getCmdId(void) const;
+	int getStepId(void) const;
+	int getUnitState(void) const;
+	int getAlarmId(void) const;
 
 private:
 	std::string time;

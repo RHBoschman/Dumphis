@@ -33,3 +33,27 @@ void DumpHis::printData(void) {
 	std::cout << "\tState: " << unitState;
 	std::cout << "\tAlarm: " << alarmId;
 }
+
+std::string DumpHis::getTime(void) const {
+	return time;
+}
+
+int DumpHis::getUnitId(void) const {
+	return unitId;
+}
+
+int DumpHis::getCmdId(void) const {
+	return cmdId;
+}
+
+int DumpHis::getStepId(void) const {
+	return stepId;
+}
+
+int DumpHis::getUnitState(void) const {
+	return unitState;
+}
+
+int DumpHis::getAlarmId(void) const {
+	return alarmId;
+}

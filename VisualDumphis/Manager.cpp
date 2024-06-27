@@ -15,7 +15,7 @@ void Manager::start(void) {
 	prepareData.createData(dumpcdbRead.getData(), dumpcdbRead.getFuncNames(), cdbdataRead.getData(), sourceDataRead.getData());
 
 	log.logInfo("Exporting data...");
-
+	exportFiles();
 }
 
 void Manager::askForInput(void) {
@@ -119,10 +119,8 @@ bool Manager::doesFileExist(const fs::path& root, const std::string& relativePat
 
 void Manager::exportFiles(void) {
 	// The 4 data structures to be exported
-	std::vector<UnitInfoDataObject>* unitInfoData = prepareData.getUnitInfoData();
-	std::vector<FunctionDataObject>* functionData = prepareData.getFunctionData();
-	std::vector<DumpHis>* dumpHisData = dumphisRead.getData();
-	std::vector<DefineDataObject>* iomData = iomnameRead.getData();
-
-	// Export to XML or JSON
+	exportJSON.exportUnitInfoData(prepareData.getUnitInfoData());
+	exportJSON.exportFunctionData(prepareData.getFunctionData());
+	exportJSON.exportDumphisData(dumphisRead.getData());
+	exportJSON.exportIomData(iomnameRead.getData());
 }

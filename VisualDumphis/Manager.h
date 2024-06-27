@@ -10,6 +10,7 @@
 #include "IOMDataManager.h"
 #include "SourceDataManager.h"
 #include "PrepareDataManager.h"
+#include "JSONExportManager.h"
 
 namespace fs = std::filesystem;
 
@@ -26,6 +27,7 @@ private:
 	IOMDataManager iomnameRead;
 	SourceDataManager sourceDataRead;
 	PrepareDataManager prepareData;
+	JSONExportManager exportJSON;
 
 	tls::LogManager log;
 	tls::Gui gui;

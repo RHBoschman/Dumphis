@@ -139,6 +139,7 @@
     <ClCompile Include="DumpHis.cpp" />
     <ClCompile Include="DumpHisManager.cpp" />
     <ClCompile Include="IOMDataManager.cpp" />
+    <ClCompile Include="JSONExportManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Manager.cpp" />
     <ClCompile Include="PrepareDataManager.cpp" />
@@ -160,7 +161,9 @@
     <ClInclude Include="DumpHisManager.h" />
     <ClInclude Include="FunctionData.h" />
     <ClInclude Include="IOMDataManager.h" />
+    <ClInclude Include="JSONExportManager.h" />
     <ClInclude Include="Manager.h" />
+    <ClInclude Include="nlohmann\json.hpp" />
     <ClInclude Include="PrepareDataManager.h" />
     <ClInclude Include="SourceData.h" />
     <ClInclude Include="SourceDataManager.h" />

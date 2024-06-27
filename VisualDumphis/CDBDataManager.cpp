@@ -20,7 +20,9 @@ void CDBDataManager::createData(const std::string& path) {
 				std::string substr = line.substr((pos_define + define.length() + 1));
 
 				DefineDataObject element;
-				element.setName(getName(substr));
+				std::string name = getName(substr);
+				removeTabs(name);
+				element.setName(name);
 				element.setValue(getNumber(substr));
 				
 				data.push_back(element);

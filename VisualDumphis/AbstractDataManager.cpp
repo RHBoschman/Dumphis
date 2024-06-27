@@ -44,3 +44,11 @@ int AbstractDataManager::getNumber(std::string& str) {
 
 	return result;
 }
+
+void AbstractDataManager::removeTabs(std::string& str) {
+	size_t pos = str.find('\t');
+	while (pos != std::string::npos) {
+		str.erase(pos, 1);
+		pos = str.find('\t', pos);
+	}
+}
