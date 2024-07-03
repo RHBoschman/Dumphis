@@ -10,12 +10,49 @@ table {
     width: 100%;
 }
 
-th, td {
-    text-align: center;
-}
-
 th {
     background-color: lightgray;
     color: black;
     font-weight: bold;
+}
+
+.timestamp {
+    text-align: center;
+    background-color: rgb(237, 218, 173);
+}
+
+.unit {
+    text-align: center;
+    background-color: aquamarine;
+}
+
+.unit-sel {
+    background-color: rgb(52, 149, 117);
+}
+
+.cmnd {
+    text-align: center;
+    background-color: rgb(190, 177, 177);
+}
+
+.cmnd-sel {
+    background-color: rgb(122, 98, 98);
+}
+
+.step {
+    text-align: center;
+    background-color: rgb(228, 236, 197);
+}
+
+.step-sel {
+    background-color: rgb(139, 148, 101);
+}
+
+.unit:hover, .cmnd:hover, .step:hover {
+    border-left: 4px solid black;
+    border-bottom: 1px solid  gray;
+}
+
+.placeholder {
+    background-color: white;
 }
