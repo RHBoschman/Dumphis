@@ -21,6 +21,10 @@ th {
     background-color: rgb(237, 218, 173);
 }
 
+.timestamp-sel {
+    background-color: rgb(159, 143, 105);
+}
+
 .unit {
     text-align: center;
     background-color: aquamarine;
@@ -48,7 +52,7 @@ th {
     background-color: rgb(139, 148, 101);
 }
 
-.unit:hover, .cmnd:hover, .step:hover {
+.timestamp:hover, .unit:hover, .cmnd:hover, .step:hover {
     border-left: 4px solid black;
     border-bottom: 1px solid  gray;
 }
