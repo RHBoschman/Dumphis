@@ -26,11 +26,14 @@ const funcDataPath = '../exports/FunctionData.json';
 let dumphisDataObj = null;
 let unitInfoDataObj = null;
 let functionDataObj = null;
+let curFuncIndex = -1;
+let n_createdCmnds = 0, n_createdSteps = 0;
 
 $(document).ready(function() {
     let selectedTimestamp = 0, newSelTimestamp = 0;
     let selectedUnit = 0, newSelUnit = 0;
     let selectedCmnd = 0, newSelCmnd = 0;
+    let selectedStep = 0, newSelStep = 0;
 
     // Initialize app on button click
     $('#but').on('click', function() {
@@ -90,9 +93,14 @@ $(document).ready(function() {
         }
     });
 
-    // $('#main-table').on('click', '.step', function() {
-
-    // });
+    $('#main-table').on('click', '.step', function() {
+        for (let i = 0; i < n_createdSteps; i++) {
+            if ($(this).attr('id') === `s_${i}`) { // On GUI selected step
+                newSelStep = i;
+                break;
+            }
+        }
+    });
 
     // Handle selections
     setInterval(function() {
@@ -128,6 +136,17 @@ $(document).ready(function() {
             $(`#c_${selectedCmnd}`).addClass('cmnd-sel');
 
             // Show steps
+            table_addSteps(selectedCmnd)
+            newSelStep = 0;
+            selectedStep = REFRESH_VALUE; // To make sure step selection is refreshed
+        }
+
+        if (newSelStep != selectedStep) {
+            selectedStep = newSelStep;
+            console.log(`New step selected: ${selectedStep}`);
+
+            $('.step-sel').removeClass('step-sel');
+            $(`#s_${selectedStep}`).addClass('step-sel');
         }
     }, 1);
 });
@@ -187,8 +206,15 @@ function table_addCmnds(selUnit) {
     }
 }
 
-function table_addSteps() {
+function table_addSteps(selCmnd) {
+    // Clean current displaying steps
+    $('.step').remove();
 
+    if (curFuncIndex != -1) {
+        n_createdSteps = showSteps(functionDataObj.data[curFuncIndex].cmnds[selCmnd].steps);
+    } else {
+        console.warn("No function index found");
+    }
 }
 
 function findNewSelUnit(selTimestamp) {
@@ -227,4 +253,15 @@ function showCmnds(cmnds) {
     }
 
     return n_cmnds;
+}
+
+function showSteps(steps) {
+    let n_steps = 0;
+    steps.forEach((item, i) => {
+        let name = (item.name === "") ? "???" : item.name;
+        let cell = $(`<td id="s_${i}" class="step">${name}</td>`);
+        $(`#row_${i}`).append(cell)
+        n_steps++;
+    });
+    return n_steps;
 }
