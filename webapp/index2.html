@@ -9,7 +9,13 @@
         <script src="script2.js" defer></script>
     </head>
     <body>
-        <button id="but">Add rows</button>
+        <div id="ctrl-pane">
+            <button id="render">START</button>
+            <button class="arrows" id="next">&#9660;</button>
+            <button class="arrows" id="previous">&#9650;</button>
+            <div id="pane-text">Changed unit:</div>
+            <div id="pane-unit"></div>
+        </div>
         <table id="main-table">
             <tr>
                 <th>Timestamp</th>

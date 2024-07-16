@@ -36,7 +36,7 @@ $(document).ready(function() {
     let selectedStep = 0, newSelStep = 0;
 
     // Initialize app on button click
-    $('#but').on('click', function() {
+    $('#render').on('click', function() {
         Promise.all([readJSON(dumphisPath), readJSON(unitInfoPath), readJSON(funcDataPath)])
             .then(([dumphisData, unitInfoData, funcData]) => {
                 dumphisDataObj = dumphisData;
@@ -121,6 +121,8 @@ $(document).ready(function() {
 
             $('.unit-sel').removeClass('unit-sel');
             $(`#u_${selectedUnit}`).addClass('unit-sel');
+
+            //TODO: add text (name of unit) in #pane-unit
 
             // Show commands
             table_addCmnds(selectedUnit);

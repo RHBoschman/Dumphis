@@ -5,15 +5,65 @@ html, body {
     padding:0;
 }
 
+#ctrl-pane {
+    background-color: rgb(36, 36, 36);
+    display: flex;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    height: 50px;
+}
+
+#render {
+    margin: 10px;
+    padding: 5px 20px;
+    background-color: rgb(90, 102, 196);
+    color: white;
+    border: none;
+    font-family: "Times New Roman", Times, serif;
+    font-weight: bolder;
+}
+
+#render:not(:disabled):hover {
+    background-color: rgb(219, 217, 217);
+}
+
+#render:disabled {
+    background-color: rgb(219, 217, 217);
+}
+
+.arrows {
+    margin: 5px;
+    padding: 5px 5px;
+    background-color: rgb(255, 255, 255);
+    border: none;
+}
+
+.arrows:hover {
+    background-color: rgb(219, 217, 217);
+}
+
+#pane-text, #pane-unit {
+    color: white;
+    padding-left: 10px;
+    font-family: "Times New Roman", Times, serif;
+}
+
 table {
     border-collapse: collapse;
     width: 100%;
+}
+
+table > * {
+    font-family: "Times New Roman", Times, serif;
 }
 
 th {
     background-color: lightgray;
     color: black;
     font-weight: bold;
+    position: sticky;
+    top: 50px;
 }
 
 .timestamp {
@@ -27,29 +77,29 @@ th {
 
 .unit {
     text-align: center;
-    background-color: aquamarine;
+    background-color: rgb(190, 177, 177);
 }
 
 .unit-sel {
-    background-color: rgb(52, 149, 117);
+    background-color: rgb(122, 98, 98);
 }
 
 .cmnd {
     text-align: center;
-    background-color: rgb(190, 177, 177);
+    background-color: rgb(239, 239, 239);
 }
 
 .cmnd-sel {
-    background-color: rgb(122, 98, 98);
+    background-color: rgb(189, 188, 188);
 }
 
 .step {
     text-align: center;
-    background-color: rgb(228, 236, 197);
+    background-color: rgb(239, 239, 239);
 }
 
 .step-sel {
-    background-color: rgb(139, 148, 101);
+    background-color: rgb(189, 188, 188);;
 }
 
 .timestamp:hover, .unit:hover, .cmnd:hover, .step:hover {
@@ -58,5 +108,5 @@ th {
 }
 
 .placeholder {
-    background-color: rgb(232, 224, 224);
+    background-color: rgb(255, 255, 255);
 }

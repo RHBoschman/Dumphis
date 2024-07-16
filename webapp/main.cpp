@@ -15,7 +15,7 @@ int main(void) {
 
     Sleep(1000);
     std::cout << "\nOpen webpage\n";
-    if (system("start http://localhost:8000/webapp/index.html") != 0) {
+    if (system("start http://localhost:8000/webapp/index2.html") != 0) {
         std::cout << "\nError while opening webpage";
     }
 
