@@ -22,12 +22,23 @@ const dumphisPath = '../exports/DumphisData.json';
 const unitInfoPath = '../exports/UnitInfoData.json';
 const funcDataPath = '../exports/FunctionData.json';
 
+const Columns = Object.freeze({
+    TIMESTAMP: 0,
+    UNIT: 1,
+    COMMAND: 2,
+    STEP: 3,
+    UNDEF: 99
+});
+
 // Global data objects to guarantee access for all code (not pretty, but functional for now)
 let dumphisDataObj = null;
 let unitInfoDataObj = null;
 let functionDataObj = null;
 let curFuncIndex = -1;
 let n_createdCmnds = 0, n_createdSteps = 0;
+let curUnitName = "";
+let maxTimestampIndex = 0;
+let curSelectedColumn = Columns.UNDEF;
 
 $(document).ready(function() {
     let selectedTimestamp = 0, newSelTimestamp = 0;
@@ -63,6 +74,33 @@ $(document).ready(function() {
                 console.error('Error fetching JSON:', error);
             });
         $(this).prop('disabled', true);
+    });
+
+    $('#next').on('click', function() {
+        if (selectedTimestamp < maxTimestampIndex) {
+            newSelTimestamp++;
+        }
+    });
+
+    $('#previous').on('click', function() {
+        if (selectedTimestamp > 0) {
+            newSelTimestamp--;
+        }
+    });
+
+    $(document).on('click', '.unit-info-button', function() {
+        if (getFocusedColumn($(this).closest('td').attr('id'))) {
+            // TODO: get and set content with CreateInfoContent()
+        }
+        
+        // Show info box
+        $('#info-box-wrapper').css("display", "block");
+        $('#close-info').focus(); // For quick closing with ENTER
+    });
+
+    $('#close-info').on('click', function() {
+        // Remove info box
+        $('#info-box-wrapper').css("display", "none");
     });
 
     // Activate listeners on all types
@@ -113,6 +151,7 @@ $(document).ready(function() {
 
             // Select different unit
             newSelUnit = findNewSelUnit(selectedTimestamp);
+            // TODO: auto select also cmnd and unit
         }
 
         if (newSelUnit != selectedUnit) {
@@ -122,7 +161,7 @@ $(document).ready(function() {
             $('.unit-sel').removeClass('unit-sel');
             $(`#u_${selectedUnit}`).addClass('unit-sel');
 
-            //TODO: add text (name of unit) in #pane-unit
+            $('#panel-unit').text(curUnitName);
 
             // Show commands
             table_addCmnds(selectedUnit);
@@ -178,13 +217,18 @@ function table_addTimestamps() {
 
         newRow.append(cell);
         $('#main-table tbody').append(newRow);
+        maxTimestampIndex = i;
     });
 }
 
 function table_addUnits() {
     unitInfoDataObj.data.forEach((item, i) => {
-        let name = (item.name === "") ? "???" : item.name;
-        let cell = $(`<td id="u_${i}" class="unit">${name}</td>`);
+        let name = (item.name === "") ? `??? (${item.id})` : item.name;
+        let cell = $(
+            `<td id="u_${i}" class="unit">
+                ${name}
+                <button class="unit-info-button">i</button>
+            </td>`);
         $(`#row_${i}`).append(cell)
     });
 }
@@ -210,12 +254,14 @@ function table_addCmnds(selUnit) {
 
 function table_addSteps(selCmnd) {
     // Clean current displaying steps
-    $('.step').remove();
+    if (n_createdCmnds > 0) {
+        $('.step').remove();
 
-    if (curFuncIndex != -1) {
-        n_createdSteps = showSteps(functionDataObj.data[curFuncIndex].cmnds[selCmnd].steps);
-    } else {
-        console.warn("No function index found");
+        if (curFuncIndex != -1) {
+            n_createdSteps = showSteps(functionDataObj.data[curFuncIndex].cmnds[selCmnd].steps);
+        } else {
+            console.warn("No function index found");
+        }
     }
 }
 
@@ -227,6 +273,7 @@ function findNewSelUnit(selTimestamp) {
     unitInfoDataObj.data.forEach((item, i) => {
         if (item.id === unitId) {
             result = i;
+            curUnitName = (item.name === "") ? `??? (${unitId})` : item.name;
         }
     });
 
@@ -244,7 +291,11 @@ function showCmnds(cmnds) {
     let n_cmnds = 0;
     cmnds.forEach((item, i) => {
         let name = (item.name === "") ? "???" : item.name;
-        let cell = $(`<td id="c_${i}" class="cmnd">${name}</td>`);
+        let cell = $(`
+            <td id="c_${i}" class="cmnd">
+                ${name}
+                <button class="unit-info-button">i</button>
+            </td>`);
         $(`#row_${i}`).append(cell)
         n_cmnds++;
     });
@@ -261,9 +312,76 @@ function showSteps(steps) {
     let n_steps = 0;
     steps.forEach((item, i) => {
         let name = (item.name === "") ? "???" : item.name;
-        let cell = $(`<td id="s_${i}" class="step">${name}</td>`);
+        let cell = $(`
+            <td id="s_${i}" class="step">
+                ${name}
+                <button class="unit-info-button">i</button>
+            </td>`);
         $(`#row_${i}`).append(cell)
         n_steps++;
     });
     return n_steps;
+}
+
+function getFocusedColumn(elementId) {
+    if (elementId === undefined) {
+        console.error("No focused element found (undefined)!");
+        curSelectedColumn = Columns.UNDEF;
+        return false;
+    }
+
+    console.log("Focused element id: " + elementId);
+    if (elementId.startsWith('t')) {
+        curSelectedColumn = Columns.TIMESTAMP;
+    } else if (elementId.startsWith('u')) {
+        curSelectedColumn = Columns.UNIT;
+    } else if (elementId.startsWith('c')) {
+        curSelectedColumn = Columns.COMMAND;
+    } else if (elementId.startsWith('s')) {
+        curSelectedColumn = Columns.STEP;
+    } else {
+        console.error("No focused element found!");
+        curSelectedColumn = Columns.UNDEF;
+        return false;
+    }
+
+    return true;
+}
+
+function createTimestampInfo(index) {
+    return; //HTML of info
+}
+
+function createUnitInfo(index) {
+    return; //HTML of info
+}
+
+function createCmndInfo(index) {
+    return; //HTML of info
+}
+
+function createStepInfo(index) {
+    return; //HTML of info
+}
+
+function createInfoContent() {
+    // Retrieve index from id
+    let index = -1;
+
+    switch (curSelectedColumn){
+        case Columns.TIMESTAMP:
+            return createTimestampInfo(index);
+
+        case Columns.UNIT:
+            return createUnitInfo(index);
+
+        case Columns.COMMAND:
+            return createCmndInfo(index);
+
+        case Columns.STEP:
+            return createStepInfo(index);
+
+        default:
+            return; // HTML: error: no information available 
+    }
 }

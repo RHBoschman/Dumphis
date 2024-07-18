@@ -1,3 +1,15 @@
 #pizza {
     background-color: rosybrown;
 }
+
+table {
+    width: 200px;
+}
+
+th, td {
+    border: 1px solid;
+}
+
+#but-right {
+    float: right;
+}

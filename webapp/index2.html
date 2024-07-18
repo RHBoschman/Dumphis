@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,14 +9,16 @@
         <script src="jquery-3.7.1.min.js" defer></script>
         <script src="script2.js" defer></script>
     </head>
+
     <body>
-        <div id="ctrl-pane">
+        <div id="ctrl-panel">
             <button id="render">START</button>
             <button class="arrows" id="next">&#9660;</button>
             <button class="arrows" id="previous">&#9650;</button>
-            <div id="pane-text">Changed unit:</div>
-            <div id="pane-unit"></div>
+            <div id="panel-text">Changed unit:</div>
+            <div id="panel-unit"></div>
         </div>
+
         <table id="main-table">
             <tr>
                 <th>Timestamp</th>
@@ -24,5 +27,15 @@
                 <th>Steps</th>
             </tr>
         </table>
+
+        <div id="info-box-wrapper" class="show-info-box">
+            <div id="info-box">
+                <button id="close-info">&#10006;</button>
+                <div id="info-box-content">
+                    Hello
+                </div>
+            </div>
+        </div>  
     </body>
+
 </html>

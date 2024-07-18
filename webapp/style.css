@@ -3,14 +3,15 @@ html, body {
     width:100%;
     margin:0;
     padding:0;
+    overflow: auto;
 }
 
-#ctrl-pane {
+#ctrl-panel {
     background-color: rgb(36, 36, 36);
     display: flex;
     align-items: center;
     position: sticky;
-    top: 0;
+    top: 0px;
     height: 50px;
 }
 
@@ -24,7 +25,7 @@ html, body {
     font-weight: bolder;
 }
 
-#render:not(:disabled):hover {
+#render:not(:disabled):hover, .unit-info-button:hover {
     background-color: rgb(219, 217, 217);
 }
 
@@ -39,11 +40,11 @@ html, body {
     border: none;
 }
 
-.arrows:hover {
+.arrows:hover, #close-info:hover {
     background-color: rgb(219, 217, 217);
 }
 
-#pane-text, #pane-unit {
+#panel-text, #panel-unit {
     color: white;
     padding-left: 10px;
     font-family: "Times New Roman", Times, serif;
@@ -109,4 +110,54 @@ th {
 
 .placeholder {
     background-color: rgb(255, 255, 255);
+}
+
+#info-box-wrapper {
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    background-color: rgba(0, 0, 0, 0.439);
+    z-index: 2000;
+    display: none;
+}
+
+#info-box {
+    background-color: white;
+    z-index: 2001;
+    width: 33vw;
+    height: 33vh;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#info-box-content {
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+}
+
+#close-info {
+    padding: 5px 10px;
+    background-color: rgb(255, 255, 255);
+    border: none;
+    float: right;
+}
+
+#close-info:focus {
+    border: 1px solid black;
+}
+
+.unit-info-button {
+    float: right;
+    margin: 5px;
+    padding: 5px 10px;
+    background-color: rgb(255, 255, 255);
+    border: none;
+    background-color: rgb(90, 102, 196);
+    color: white;
+    font-weight: border;
 }
