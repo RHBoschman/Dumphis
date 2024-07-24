@@ -76,6 +76,7 @@ $(document).ready(function() {
         $(this).prop('disabled', true);
     });
 
+    // Buttons to iterate over timestamps
     $('#next').on('click', function() {
         if (selectedTimestamp < maxTimestampIndex) {
             newSelTimestamp++;
@@ -88,17 +89,23 @@ $(document).ready(function() {
         }
     });
 
+    // General handling of info button
     $(document).on('click', '.unit-info-button', function() {
-        if (getFocusedColumn($(this).closest('td').attr('id'))) {
-            // TODO: get and set content with CreateInfoContent()
+        let elementId = $(this).closest('td').attr('id');
+        if (getFocusedColumn(elementId)) {
+            $('#info-volume').empty();
+            $('#info-volume').append(createInfoContent(elementId));
+        }
+        else {
+            // TODO: implement error message
         }
         
         // Show info box
         $('#info-box-wrapper').css("display", "block");
-        $('#close-info').focus(); // For quick closing with ENTER
+        $('#info-close').focus(); // For quick closing with ENTER
     });
 
-    $('#close-info').on('click', function() {
+    $('#info-close').on('click', function() {
         // Remove info box
         $('#info-box-wrapper').css("display", "none");
     });
@@ -213,7 +220,11 @@ function readJSON(path) {
 function table_addTimestamps() {
     dumphisDataObj.data.forEach((item, i) => {
         let newRow = $(`<tr id="row_${i}">`);
-        let cell = $(`<td id="t_${i}" class="timestamp">${item.time}</td>`);
+        let cell = $(
+            `<td id="t_${i}" class="timestamp">
+                ${item.time}
+                <button class="unit-info-button">i</button>
+            </td>`);
 
         newRow.append(cell);
         $('#main-table tbody').append(newRow);
@@ -349,24 +360,112 @@ function getFocusedColumn(elementId) {
 }
 
 function createTimestampInfo(index) {
-    return; //HTML of info
+    let text = `
+        <div id="info-header">
+            <h1>Timestamp info</h1>
+        </div>
+        <div id="info-content">
+            <table class="info-list-table">
+                <tr>
+                    <td class="info-list-header">Time</td>
+                    <td>2024-03-28  13:04:54</td>
+                </tr>
+                <tr>
+                    <td class="info-list-header">Alarm</td>
+                    <td>none</td>
+                </tr>
+                <tr>
+                    <td class="info-list-header">Changed unit</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td class="info-list-header">Changed command</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td class="info-list-header">Changed step</td>
+                    <td>1</td>
+                </tr>
+                <tr>
+                    <td class="info-list-header">Unit state</td>
+                    <td>255</td>
+                </tr>
+            </table>
+        </div>
+    `;
+    return text;
 }
 
 function createUnitInfo(index) {
-    return; //HTML of info
+    let text = `
+        <div id="info-header">
+            <h1>Unit info</h1>
+        </div>
+        <div id="info-content">
+            <table class="info-list-table">
+                <tr>
+                    <td class="info-list-header">Name</td>
+                    <td>U_SEQUENCE</td>
+                </tr>
+                <tr>
+                    <td class="info-list-header">ID</td>
+                    <td>362</td>
+                </tr>
+                <tr>
+                    <td class="info-list-header">Nr. of (fall) commands</td>
+                    <td>4</td>
+                </tr>
+                <tr>
+                    <td class="info-list-header">Type</td>
+                    <td>Entity</td>
+                </tr>
+                <tr>
+                    <td class="info-list-header">Function</td>
+                    <td>sequence</td>
+                </tr>
+                <tr>
+                    <td class="info-list-header">Children</td>
+                    <td>
+                        <span>1</span><br>
+                        <span>2</span><br>
+                        <span>3</span><br>
+                        <span>4</span><br>
+                        <span>5</span><br>
+                        <span>6</span><br>
+                        <span>1</span><br>
+                        <span>2</span><br>
+                        <span>3</span><br>
+                        <span>4</span><br>
+                        <span>5</span><br>
+                        <span>6</span><br>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    `;
+    return text;
 }
 
 function createCmndInfo(index) {
-    return; //HTML of info
+    let text = `
+        <div id="info-header">
+            <h1>Command info</h1>
+        </div>
+    `;
+    return text;
 }
 
 function createStepInfo(index) {
-    return; //HTML of info
+    let text = `
+        <div id="info-header">
+            <h1>Step info</h1>
+        </div>
+    `;
+    return text;
 }
 
-function createInfoContent() {
-    // Retrieve index from id
-    let index = -1;
+function createInfoContent(elementId) {
+    let index = elementId.substring(2, 2)
 
     switch (curSelectedColumn){
         case Columns.TIMESTAMP:
@@ -382,6 +481,10 @@ function createInfoContent() {
             return createStepInfo(index);
 
         default:
-            return; // HTML: error: no information available 
+            let text = `
+                <h1>Error:</h1>
+                <p>No additional information available</p>
+            `;
+            return text;
     }
 }
