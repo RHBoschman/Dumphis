@@ -360,6 +360,28 @@ function getFocusedColumn(elementId) {
 }
 
 function createTimestampInfo(index) {
+    let time = dumphisDataObj.data[index].time;
+    let alarm = (dumphisDataObj.data[index].alarmId) == 0 ? "none" : dumphisDataObj.data[index].alarmId;
+    let unit = dumphisDataObj.data[index].unitId;
+    let cmnd = dumphisDataObj.data[index].cmdId;
+    let step = dumphisDataObj.data[index].stepId;
+    let state = dumphisDataObj.data[index].unitState;
+    let stateColor = null;
+    console.log(`state: ${state}`);
+    if (state == -1) 
+        stateColor = ` class="state-error"`
+    else if (state == 127) 
+        stateColor = ` class="state-wait"`
+    else
+        stateColor = "";
+
+    let unitName = null;
+    unitInfoDataObj.data.forEach((item, i) => {
+        if (item.id === unit) {
+            unitName = (item.name === "") ? `??? (${unit})` : item.name;
+        }
+    });
+
     let text = `
         <div id="info-header">
             <h1>Timestamp info</h1>
@@ -368,27 +390,27 @@ function createTimestampInfo(index) {
             <table class="info-list-table">
                 <tr>
                     <td class="info-list-header">Time</td>
-                    <td>2024-03-28  13:04:54</td>
+                    <td>${time}</td>
                 </tr>
                 <tr>
                     <td class="info-list-header">Alarm</td>
-                    <td>none</td>
+                    <td>${alarm}</td>
                 </tr>
                 <tr>
                     <td class="info-list-header">Changed unit</td>
-                    <td>1</td>
+                    <td>${unitName}</td>
                 </tr>
                 <tr>
                     <td class="info-list-header">Changed command</td>
-                    <td>1</td>
+                    <td>${cmnd}</td>
                 </tr>
                 <tr>
                     <td class="info-list-header">Changed step</td>
-                    <td>1</td>
+                    <td>${step}</td>
                 </tr>
                 <tr>
                     <td class="info-list-header">Unit state</td>
-                    <td>255</td>
+                    <td${stateColor}>${state}</td>
                 </tr>
             </table>
         </div>
@@ -432,12 +454,8 @@ function createUnitInfo(index) {
                         <span>4</span><br>
                         <span>5</span><br>
                         <span>6</span><br>
-                        <span>1</span><br>
-                        <span>2</span><br>
-                        <span>3</span><br>
-                        <span>4</span><br>
-                        <span>5</span><br>
-                        <span>6</span><br>
+                        <span>7</span><br>
+                        <span>8</span><br>
                     </td>
                 </tr>
             </table>
@@ -451,6 +469,29 @@ function createCmndInfo(index) {
         <div id="info-header">
             <h1>Command info</h1>
         </div>
+        <div id="info-content">
+            <table class="info-list-table">
+                <tr>
+                    <td class="info-list-header">Name</td>
+                    <td>SEQUENCE_INIT</td>
+                </tr>
+                <tr>
+                    <td class="info-list-header">ID</td>
+                    <td>0</td>
+                </tr>
+                <tr>
+                    <td class="info-list-header">Steps</td>
+                    <td>
+                        <span>START_STEP</span><br>
+                        <span>1</span><br>
+                        <span>2</span><br>
+                        <span>3</span><br>
+                        <span>4</span><br>
+                        <span>5</span><br>
+                    </td>
+                </tr>
+            </table>
+        </div>
     `;
     return text;
 }
@@ -460,12 +501,24 @@ function createStepInfo(index) {
         <div id="info-header">
             <h1>Step info</h1>
         </div>
+        <div id="info-content">
+            <table class="info-list-table">
+                <tr>
+                    <td class="info-list-header">Name</td>
+                    <td>START_STEP</td>
+                </tr>
+                <tr>
+                    <td class="info-list-header">Link</td>
+                    <td><a href="https://www.w3schools.com/">view code</a></td>
+                </tr>
+            </table>
+        </div>
     `;
     return text;
 }
 
 function createInfoContent(elementId) {
-    let index = elementId.substring(2, 2)
+    let index = elementId.substring(2);
 
     switch (curSelectedColumn){
         case Columns.TIMESTAMP:
