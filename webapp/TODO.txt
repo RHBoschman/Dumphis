@@ -1,0 +1,3 @@
+- Continue to finish Unit info box
+- Go further with cmnd and step info box
+- Change info button to double click and add help button (?) in ctrl panel

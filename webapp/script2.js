@@ -1,22 +1,7 @@
-// This file is used to develop the same functionality as script.js
-// but from a different approach. Namely: using standardized functions 
-// to show the data columns using some variables like 'xxx_selected'.
-// selectedTimeStamp
-// selectedUnit
-// selectedCommand
-// selectedStep
-
-// Procedure:
-// - add listener to button click
-// - add timestamps and units
-// - give every column a 'selected' variable
-// - Create some kind of loop that constantly checks the
-//   select variables on a change. Then update accordingly.
-//   loop is not possible (would block all listeners), but
-//   you can do something like interval (chat gpt)
 
 const N_EXTRA_CMNDS = 30; // Should NOT be bigger then number of dumphis items!!!
 const REFRESH_VALUE = -1;
+const MAX_NR_DATA_CON = 8;
 
 const dumphisPath = '../exports/DumphisData.json';
 const unitInfoPath = '../exports/UnitInfoData.json';
@@ -375,7 +360,7 @@ function createTimestampInfo(index) {
     else
         stateColor = "";
 
-    let unitName = null;
+    let unitName = `??? (${unit})`;
     unitInfoDataObj.data.forEach((item, i) => {
         if (item.id === unit) {
             unitName = (item.name === "") ? `??? (${unit})` : item.name;
@@ -419,6 +404,54 @@ function createTimestampInfo(index) {
 }
 
 function createUnitInfo(index) {
+    let name = unitInfoDataObj.data[index].name;
+    let id = unitInfoDataObj.data[index].id;
+    let nrCmnds = unitInfoDataObj.data[index].n_cmnds;
+    let typeNr = unitInfoDataObj.data[index].type;
+    let type = null;
+    switch (typeNr) {
+        case 0:
+            type = "unit";
+            break;
+
+        case 1:
+            type = "entity";
+            break;
+
+        case 2:
+        default:
+            type = "unknown";
+            break;
+    }
+
+    let func = "unknown";
+    let unitFuncId = unitInfoDataObj.data[index].funcId;
+    for (let i = 0; i < functionDataObj.size; i++) {
+        let funcFuncId = functionDataObj.data[i].funcId;
+        if (funcFuncId === unitFuncId) {
+            func = functionDataObj.data[i].name;
+            break;
+        }
+    }
+
+    let childrenTxt = "";
+    for (let i = 0; i < MAX_NR_DATA_CON; i++) {
+        let dc = unitInfoDataObj.data[index].dataConnections[i];
+        let unitName = `??? (${dc})`;
+        let txt = null;
+        if (dc != 0) {
+            unitInfoDataObj.data.forEach((item) => {
+                if (item.id === dc) {
+                    unitName = (item.name === "") ? `??? (${dc})` : `${item.name} (${dc})`;
+                }
+            });
+            txt = `[${i}] ${unitName}`;
+        } else {
+            txt = `[${i}]`;
+        }
+        childrenTxt += `<span>${txt}</span><br>`;
+    }
+
     let text = `
         <div id="info-header">
             <h1>Unit info</h1>
@@ -427,36 +460,27 @@ function createUnitInfo(index) {
             <table class="info-list-table">
                 <tr>
                     <td class="info-list-header">Name</td>
-                    <td>U_SEQUENCE</td>
+                    <td>${name}</td>
                 </tr>
                 <tr>
                     <td class="info-list-header">ID</td>
-                    <td>362</td>
+                    <td>${id}</td>
                 </tr>
                 <tr>
                     <td class="info-list-header">Nr. of (fall) commands</td>
-                    <td>4</td>
+                    <td>${nrCmnds}</td>
                 </tr>
                 <tr>
                     <td class="info-list-header">Type</td>
-                    <td>Entity</td>
+                    <td>${type}</td>
                 </tr>
                 <tr>
                     <td class="info-list-header">Function</td>
-                    <td>sequence</td>
+                    <td>${func}</td>
                 </tr>
                 <tr>
                     <td class="info-list-header">Children</td>
-                    <td>
-                        <span>1</span><br>
-                        <span>2</span><br>
-                        <span>3</span><br>
-                        <span>4</span><br>
-                        <span>5</span><br>
-                        <span>6</span><br>
-                        <span>7</span><br>
-                        <span>8</span><br>
-                    </td>
+                    <td>${childrenTxt}</td>
                 </tr>
             </table>
         </div>
