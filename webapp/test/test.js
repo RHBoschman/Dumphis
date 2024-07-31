@@ -1,9 +1,11 @@
 $(document).ready(function () {
-    $('#but').on('click', function() {
-        addPara();
-    })
-});
 
-function addPara() {
-    $("#a-div").append('<p id="pizza">New</p>');
-}
+    $('.dbc').dblclick(function() {
+        $('.dbc').css("background-color", "lightgray");;
+    });
+
+    $('.dbc').on('click', function() {
+        $('.dbc').css("background-color", "yellow");;
+    });
+
+});

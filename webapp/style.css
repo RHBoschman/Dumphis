@@ -1,3 +1,7 @@
+:root {
+    --col-select: rgb(133, 136, 191);
+}
+
 html, body {
     height:100%;
     width:100%;
@@ -60,8 +64,8 @@ table > * {
 }
 
 th {
-    background-color: lightgray;
-    color: black;
+    background-color: rgb(108, 108, 108);
+    color: rgb(196, 196, 196);
     font-weight: bold;
     position: sticky;
     top: 50px;
@@ -69,38 +73,38 @@ th {
 
 .timestamp {
     text-align: center;
-    background-color: rgb(237, 218, 173);
+    background-color: lightgray;
 }
 
 .timestamp-sel {
-    background-color: rgb(159, 143, 105);
+    background-color: var(--col-select);
 }
 
 .unit {
     text-align: center;
-    background-color: rgb(190, 177, 177);
+    background-color: rgb(233, 233, 233);
 }
 
 .unit-sel {
-    background-color: rgb(122, 98, 98);
+    background-color: var(--col-select);
 }
 
 .cmnd {
     text-align: center;
-    background-color: rgb(239, 239, 239);
+    background-color: lightgray;
 }
 
 .cmnd-sel {
-    background-color: rgb(189, 188, 188);
+    background-color: var(--col-select);
 }
 
 .step {
     text-align: center;
-    background-color: rgb(239, 239, 239);
+    background-color: rgb(233, 233, 233);
 }
 
 .step-sel {
-    background-color: rgb(189, 188, 188);;
+    background-color: var(--col-select);
 }
 
 .timestamp:hover, .unit:hover, .cmnd:hover, .step:hover {
@@ -110,17 +114,6 @@ th {
 
 .placeholder {
     background-color: rgb(255, 255, 255);
-}
-
-.unit-info-button {
-    float: right;
-    margin: 5px;
-    padding: 5px 10px;
-    background-color: rgb(255, 255, 255);
-    border: none;
-    background-color: rgb(90, 102, 196);
-    color: white;
-    font-weight: border;
 }
 
 #info-box-wrapper {
@@ -222,5 +215,5 @@ th {
 }
 
 .state-wait {
-    background-color: rgb(0, 255, 64) !important;
+    background-color: rgb(0, 255, 0) !important;
 }

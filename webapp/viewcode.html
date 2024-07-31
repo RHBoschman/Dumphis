@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>View Code</title>
+
+        <style>
+            :root {
+                --w: 530px;
+                --w2: calc(var(--w) / 10);
+                --h: 4px;
+            }
+
+            h1 {
+                text-align: center;
+            }
+
+            #load-box {
+                /*border: 1px solid rgb(0, 0, 0);*/
+                width: var(--w);
+                height: var(--h);
+                background-color: lightgray;
+                position: relative;
+                overflow: hidden;
+                margin: auto;
+            }
+
+            #load-block {
+                height: var(--h);
+                width: 10%;
+                background-color: rgb(133, 136, 191);
+                border: none;
+                position: absolute;
+                left: 0px;
+                animation: run 2s;
+                animation-timing-function: linear;
+                animation-iteration-count: infinite;
+            }
+
+            @keyframes run {
+                from {left: calc(var(--w2)*-1);}
+                to {left: var(--w);}
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Sorry! This page is under construction.</h1>
+        <div id="load-box">
+            <div id="load-block"></div>
+        </div>
+    </body>
+</html>

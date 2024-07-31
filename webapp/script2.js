@@ -20,6 +20,7 @@ let dumphisDataObj = null;
 let unitInfoDataObj = null;
 let functionDataObj = null;
 let curFuncIndex = -1;
+let curCmndIndex = -1;
 let n_createdCmnds = 0, n_createdSteps = 0;
 let curUnitName = "";
 let maxTimestampIndex = 0;
@@ -74,8 +75,8 @@ $(document).ready(function() {
         }
     });
 
-    // General handling of info button
-    $(document).on('click', '.unit-info-button', function() {
+    // Test double click
+    $(document).on('dblclick', '.unit-info-trig', function() {
         let elementId = $(this).closest('td').attr('id');
         if (getFocusedColumn(elementId)) {
             $('#info-volume').empty();
@@ -140,9 +141,11 @@ $(document).ready(function() {
             
             $('.timestamp-sel').removeClass('timestamp-sel');
             $(`#t_${selectedTimestamp}`).addClass('timestamp-sel');
+            jumpToSection(`#t_${selectedTimestamp}`);
 
             // Select different unit
             newSelUnit = findNewSelUnit(selectedTimestamp);
+
             // TODO: auto select also cmnd and unit
         }
 
@@ -206,9 +209,8 @@ function table_addTimestamps() {
     dumphisDataObj.data.forEach((item, i) => {
         let newRow = $(`<tr id="row_${i}">`);
         let cell = $(
-            `<td id="t_${i}" class="timestamp">
+            `<td id="t_${i}" class="timestamp unit-info-trig">
                 ${item.time}
-                <button class="unit-info-button">i</button>
             </td>`);
 
         newRow.append(cell);
@@ -219,11 +221,10 @@ function table_addTimestamps() {
 
 function table_addUnits() {
     unitInfoDataObj.data.forEach((item, i) => {
-        let name = (item.name === "") ? `??? (${item.id})` : item.name;
+        let name = (item.name === "") ? `??? (${item.id})` : `${item.name} (${item.id})`;
         let cell = $(
-            `<td id="u_${i}" class="unit">
+            `<td id="u_${i}" class="unit unit-info-trig">
                 ${name}
-                <button class="unit-info-button">i</button>
             </td>`);
         $(`#row_${i}`).append(cell)
     });
@@ -254,9 +255,11 @@ function table_addSteps(selCmnd) {
         $('.step').remove();
 
         if (curFuncIndex != -1) {
+            curCmndIndex = selCmnd;
             n_createdSteps = showSteps(functionDataObj.data[curFuncIndex].cmnds[selCmnd].steps);
         } else {
             console.warn("No function index found");
+            curCmndIndex = -1;
         }
     }
 }
@@ -269,7 +272,7 @@ function findNewSelUnit(selTimestamp) {
     unitInfoDataObj.data.forEach((item, i) => {
         if (item.id === unitId) {
             result = i;
-            curUnitName = (item.name === "") ? `??? (${unitId})` : item.name;
+            curUnitName = (item.name === "") ? `??? (${unitId})` : `${item.name} (${item.id})`;
         }
     });
 
@@ -288,16 +291,15 @@ function showCmnds(cmnds) {
     cmnds.forEach((item, i) => {
         let name = (item.name === "") ? "???" : item.name;
         let cell = $(`
-            <td id="c_${i}" class="cmnd">
+            <td id="c_${i}" class="cmnd unit-info-trig">
                 ${name}
-                <button class="unit-info-button">i</button>
             </td>`);
         $(`#row_${i}`).append(cell)
         n_cmnds++;
     });
 
     for (let i = 0; i < (N_EXTRA_CMNDS - n_cmnds); i++) {
-        let cell = $('<td class="placeholder"></td>'); // Empty element
+        let cell = $('<td class="placeholder"></td>'); // Empty element to prevent steps going to wrong column
         $(`#row_${n_cmnds + i}`).append(cell)
     }
 
@@ -309,9 +311,8 @@ function showSteps(steps) {
     steps.forEach((item, i) => {
         let name = (item.name === "") ? "???" : item.name;
         let cell = $(`
-            <td id="s_${i}" class="step">
+            <td id="s_${i}" class="step unit-info-trig">
                 ${name}
-                <button class="unit-info-button">i</button>
             </td>`);
         $(`#row_${i}`).append(cell)
         n_steps++;
@@ -489,6 +490,25 @@ function createUnitInfo(index) {
 }
 
 function createCmndInfo(index) {
+    if (curFuncIndex < 0) {
+        console.error("Could not create command info box: func index < 0");
+        return "";
+    }    
+    let cmnd = functionDataObj.data[curFuncIndex].cmnds[index];
+
+    let stepSize = cmnd.steps.length;
+    let childrenTxt = "";
+    for (let i = 0; i < stepSize; i++) {
+        let step = cmnd.steps[i];
+        let stepName = `???`;
+        if (step.name != "") {
+            stepName = step.name;
+        }
+        let txt = null;
+        txt = `${stepName}`;
+        childrenTxt += `<span>${txt}</span><br>`;
+    }
+
     let text = `
         <div id="info-header">
             <h1>Command info</h1>
@@ -497,22 +517,15 @@ function createCmndInfo(index) {
             <table class="info-list-table">
                 <tr>
                     <td class="info-list-header">Name</td>
-                    <td>SEQUENCE_INIT</td>
+                    <td>${cmnd.name}</td>
                 </tr>
                 <tr>
                     <td class="info-list-header">ID</td>
-                    <td>0</td>
+                    <td>${cmnd.id}</td>
                 </tr>
                 <tr>
                     <td class="info-list-header">Steps</td>
-                    <td>
-                        <span>START_STEP</span><br>
-                        <span>1</span><br>
-                        <span>2</span><br>
-                        <span>3</span><br>
-                        <span>4</span><br>
-                        <span>5</span><br>
-                    </td>
+                    <td>${childrenTxt}</td>
                 </tr>
             </table>
         </div>
@@ -521,6 +534,12 @@ function createCmndInfo(index) {
 }
 
 function createStepInfo(index) {
+    if (curFuncIndex < 0 || curCmndIndex < 0) {
+        console.error("Could not create command info box: func or cmnd index < 0");
+        return "";
+    }    
+    let step = functionDataObj.data[curFuncIndex].cmnds[curCmndIndex].steps[index];
+
     let text = `
         <div id="info-header">
             <h1>Step info</h1>
@@ -529,11 +548,11 @@ function createStepInfo(index) {
             <table class="info-list-table">
                 <tr>
                     <td class="info-list-header">Name</td>
-                    <td>START_STEP</td>
+                    <td>${step.name}</td>
                 </tr>
                 <tr>
                     <td class="info-list-header">Link</td>
-                    <td><a href="https://www.w3schools.com/">view code</a></td>
+                    <td><a href="viewcode.html" target="_blank">view code</a></td>
                 </tr>
             </table>
         </div>
@@ -564,4 +583,13 @@ function createInfoContent(elementId) {
             `;
             return text;
     }
+}
+
+function jumpToSection(sectionId) {
+    let headerHeight = $('#ctrl-panel').outerHeight() + $('#main-table-header').outerHeight();
+    let targetPosition = $(sectionId).offset().top;
+    let offsetPosition = targetPosition - headerHeight
+    $('html, body').animate({
+        scrollTop: offsetPosition
+    }, 600);
 }
