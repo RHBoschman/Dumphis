@@ -137,7 +137,7 @@ $(document).ready(function() {
     setInterval(function() {
         if (newSelTimestamp != selectedTimestamp) {
             selectedTimestamp = newSelTimestamp;
-            console.log(`New timestamp selected: ${selectedTimestamp}`);
+            //console.log(`New timestamp selected: ${selectedTimestamp}`);
             
             $('.timestamp-sel').removeClass('timestamp-sel');
             $(`#t_${selectedTimestamp}`).addClass('timestamp-sel');
@@ -151,7 +151,7 @@ $(document).ready(function() {
 
         if (newSelUnit != selectedUnit) {
             selectedUnit = newSelUnit;
-            console.log(`New unit selected: ${selectedUnit}`);
+            //console.log(`New unit selected: ${selectedUnit}`);
 
             $('.unit-sel').removeClass('unit-sel');
             $(`#u_${selectedUnit}`).addClass('unit-sel');
@@ -166,7 +166,7 @@ $(document).ready(function() {
 
         if (newSelCmnd != selectedCmnd) {
             selectedCmnd = newSelCmnd;
-            console.log(`New command selected: ${selectedCmnd}`);
+            //console.log(`New command selected: ${selectedCmnd}`);
 
             $('.cmnd-sel').removeClass('cmnd-sel');
             $(`#c_${selectedCmnd}`).addClass('cmnd-sel');
@@ -179,7 +179,7 @@ $(document).ready(function() {
 
         if (newSelStep != selectedStep) {
             selectedStep = newSelStep;
-            console.log(`New step selected: ${selectedStep}`);
+            //console.log(`New step selected: ${selectedStep}`);
 
             $('.step-sel').removeClass('step-sel');
             $(`#s_${selectedStep}`).addClass('step-sel');
@@ -267,7 +267,7 @@ function table_addSteps(selCmnd) {
 function findNewSelUnit(selTimestamp) {
     let unitId = dumphisDataObj.data[selTimestamp].unitId;
     let result = -1;
-    console.log(`Unit id: ${unitId}`);
+    //console.log(`Unit id: ${unitId}`);
 
     unitInfoDataObj.data.forEach((item, i) => {
         if (item.id === unitId) {
@@ -289,7 +289,7 @@ function findNewSelUnit(selTimestamp) {
 function showCmnds(cmnds) {
     let n_cmnds = 0;
     cmnds.forEach((item, i) => {
-        let name = (item.name === "") ? "???" : item.name;
+        let name = (item.name === "") ? `??? (${item.id})` : `${item.name} (${item.id})`;
         let cell = $(`
             <td id="c_${i}" class="cmnd unit-info-trig">
                 ${name}
@@ -327,7 +327,7 @@ function getFocusedColumn(elementId) {
         return false;
     }
 
-    console.log("Focused element id: " + elementId);
+    //console.log("Focused element id: " + elementId);
     if (elementId.startsWith('t')) {
         curSelectedColumn = Columns.TIMESTAMP;
     } else if (elementId.startsWith('u')) {
@@ -353,7 +353,7 @@ function createTimestampInfo(index) {
     let step = dumphisDataObj.data[index].stepId;
     let state = dumphisDataObj.data[index].unitState;
     let stateColor = null;
-    console.log(`state: ${state}`);
+    //console.log(`state: ${state}`);
     if (state == -1) 
         stateColor = ` class="state-error"`
     else if (state == 127) 
@@ -585,11 +585,37 @@ function createInfoContent(elementId) {
     }
 }
 
-function jumpToSection(sectionId) {
+function animateScroll(top, duration) {
+    return new Promise((resolve) => {
+        $('html, body').animate({ scrollTop: top }, duration, resolve);
+    });
+}
+
+let newPos = 0;
+let oldSectionIndex = 0;
+async function jumpToSection(sectionId) {
     let headerHeight = $('#ctrl-panel').outerHeight() + $('#main-table-header').outerHeight();
-    let targetPosition = $(sectionId).offset().top;
-    let offsetPosition = targetPosition - headerHeight
-    $('html, body').animate({
-        scrollTop: offsetPosition
-    }, 600);
+    let targetPosition = $(sectionId).get(0).getBoundingClientRect().top;
+    let offsetPosition = targetPosition - headerHeight;
+
+    let sectionIndex = $(sectionId).attr('id').substring(2);
+    if (sectionIndex < oldSectionIndex) {
+        await animateScroll(0, 600);
+        targetPosition = $(sectionId).get(0).getBoundingClientRect().top;
+        offsetPosition = targetPosition - headerHeight;
+        newPos = offsetPosition;
+    }
+    else {
+        newPos += offsetPosition;
+    }
+
+    let outText = "Scroll: " + sectionId;
+    outText += "\nHH: " + headerHeight +
+               "\nTP: " + targetPosition +
+               "\nOP: " + offsetPosition;
+    console.log(outText);
+
+    await animateScroll(newPos, 600);
+
+    oldSectionIndex = sectionIndex
 }

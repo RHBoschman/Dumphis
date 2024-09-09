@@ -1,3 +1,5 @@
-- Continue to finish Unit info box
-- Go further with cmnd and step info box
-- Change info button to double click and add help button (?) in ctrl panel
+- Finish scrolling -> selecting timetamp with higher index then last one (outside viewport)
+- Add loading screen while scrolling
+- Add checkbox to disable scrolling
+- Add info button (help button)
+- Add search bar

@@ -1,11 +1,8 @@
 $(document).ready(function () {
 
-    $('.dbc').dblclick(function() {
-        $('.dbc').css("background-color", "lightgray");;
-    });
-
-    $('.dbc').on('click', function() {
-        $('.dbc').css("background-color", "yellow");;
+    $(window).on('scroll', function() {
+        let scrollTop = $(window).scrollTop();
+        $('#test').text(scrollTop);
     });
 
 });
