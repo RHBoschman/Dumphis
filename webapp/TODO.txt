@@ -1,5 +1,10 @@
 - Finish scrolling -> selecting timetamp with higher index then last one (outside viewport)
-- Add loading screen while scrolling
-- Add checkbox to disable scrolling
-- Add info button (help button)
-- Add search bar
+- Add info box when clicking on info button
+- Add method to search for units/entities, commands or steps
+- Add way to filter out things:
+    Select filter on <checkbox> <text input>
+        unit = xxx (miss zelfs meerdere zoals 123, 234, 345)
+        command = xxx
+        step = xxx
+        state = xxx (etc)
+    This will show only the timestamps that have these filters specified

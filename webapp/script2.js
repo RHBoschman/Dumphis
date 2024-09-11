@@ -133,6 +133,16 @@ $(document).ready(function() {
         }
     });
 
+    $('#btn-search').on('click', function() { 
+        var $inputSearch = $('#input-search');
+
+        $inputSearch.css("display", "block");
+
+        setTimeout(function() {
+            $inputSearch.addClass('animation-input-search');
+        }, 10);
+    });
+
     // Handle selections
     setInterval(function() {
         if (newSelTimestamp != selectedTimestamp) {
@@ -141,7 +151,9 @@ $(document).ready(function() {
             
             $('.timestamp-sel').removeClass('timestamp-sel');
             $(`#t_${selectedTimestamp}`).addClass('timestamp-sel');
-            jumpToSection(`#t_${selectedTimestamp}`);
+            if ($("#check-scroll").is(':not(:checked)')) {
+                jumpToSection(`#t_${selectedTimestamp}`);
+            }
 
             // Select different unit
             newSelUnit = findNewSelUnit(selectedTimestamp);
@@ -586,6 +598,7 @@ function createInfoContent(elementId) {
 }
 
 function animateScroll(top, duration) {
+    $("#load-wrap").css("display", "flex");
     return new Promise((resolve) => {
         $('html, body').animate({ scrollTop: top }, duration, resolve);
     });
@@ -616,6 +629,7 @@ async function jumpToSection(sectionId) {
     console.log(outText);
 
     await animateScroll(newPos, 600);
+    $("#load-wrap").css("display", "none");
 
     oldSectionIndex = sectionIndex
 }

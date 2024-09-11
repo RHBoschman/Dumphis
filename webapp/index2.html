@@ -6,17 +6,33 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Visualize dumphis TEST</title>
         <link rel="stylesheet" href="style.css"></style>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
         <script src="jquery-3.7.1.min.js" defer></script>
         <script src="script2.js" defer></script>
     </head>
 
     <body>
+        <div id="load-wrap">
+            <div id="load-icon"></div>
+        </div>
+
         <div id="ctrl-panel">
-            <button id="render">START</button>
-            <button class="arrows" id="next">&#9660;</button>
-            <button class="arrows" id="previous">&#9650;</button>
-            <div id="panel-text">Changed unit:</div>
-            <div id="panel-unit"></div>
+            <div id="panel-left">
+                <button id="render" title="Start rendering the data from the snapshot">START</button>
+                <button class="arrows" id="next" title="Next time stamp">&#9660;</button>
+                <button class="arrows" id="previous" title="Previous time stamp">&#9650;</button>
+                <div id="panel-text">Changed unit:</div>
+                <div id="panel-unit"></div>
+            </div>
+            <div id="panel-right">
+                <input type="text" id="input-search" placeholder="Search...">
+                <button id="btn-search" title="Search for unit/entity, command or step">
+                    <i class="fas fa-search"></i>
+                </button>
+                <button id="btn-help" title="Extra information about using this page">?</button>
+                <input type="checkbox" name="scrollDisable" id="check-scroll">
+                <label id="scroll-disable" for="check-scroll">Disable auto scroll</label>
+            </div>
         </div>
 
         <table id="main-table">
@@ -31,9 +47,7 @@
         <div id="info-box-wrapper" class="show-info-box">
             <div id="info-box">
                 <button id="info-close">&#10006;</button>
-                <div id="info-volume">
-                    
-                </div>
+                <div id="info-volume"></div>
             </div>
         </div>  
     </body>

@@ -1,8 +1,7 @@
 $(document).ready(function () {
 
-    $(window).on('scroll', function() {
-        let scrollTop = $(window).scrollTop();
-        $('#test').text(scrollTop);
+    $("#but").on('click', function() {
+        $("#load-wrap").css("display", "flex");
     });
 
 });
