@@ -29,7 +29,9 @@ html, body {
     font-weight: bolder;
 }
 
-#render:not(:disabled):hover, .unit-info-button:hover {
+#render:not(:disabled):hover, 
+#btn-filter-reset:hover, 
+#btn-filter-apply:hover {
     background-color: rgb(219, 217, 217);
 }
 
@@ -72,14 +74,14 @@ html, body {
     /* background-color: red; */
 }
 
-#btn-search {
+#btn-search, #btn-filter {
     background-color: rgb(36, 36, 36);
     border: none;
     padding: 5px 10px;
     height: 60%;
 }
 
-.fa-search {
+.fa-search, .fa-filter {
     color: white;
 }
 
@@ -91,6 +93,7 @@ html, body {
     color: white;
     display: none;
     width: 0px;
+    margin-right: 5px;
 }
 
 .animation-input-search {
@@ -102,7 +105,10 @@ html, body {
     to { width: 300px; }
 }
 
-#input-search:focus {
+#input-search:focus,
+#filter-inp-unit:focus,
+#filter-inp-cmnd:focus,
+#filter-inp-step:focus {
     background-color: rgb(63, 61, 93);
 }
 
@@ -125,8 +131,77 @@ html, body {
     font-size: large;
 }
 
-#btn-help:hover, #btn-search:hover {
+#btn-help:hover, #btn-search:hover, #btn-filter:hover {
     background-color: rgb(108, 108, 108);
+}
+
+.filter-container {
+    background-color: rgb(36, 36, 36);
+    top: 50px;
+    right: 195px;
+    height: 0px;
+    position: fixed;
+    width: 215px;
+    padding: 0;
+    margin: 0;
+    z-index: 2;
+    display: none;
+    overflow: hidden;
+}
+
+.animation-filter-box {
+    animation: filterBox 0.3s ease-out;
+    height: 192px;
+}
+
+@keyframes filterBox {
+    from { height: 0px; }
+    to { height: 192px; }
+}
+
+#filter-list {
+    list-style-type: none;
+    padding-left: 20px;
+}
+
+.filter-labels {
+    color: white;
+}
+
+#filter-button-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+    margin-top: 10px;
+    gap: 10px;
+}
+
+.btn-filter-ctrl {
+    padding: 5px 20px;
+    background-color: rgb(90, 102, 196);
+    color: white;
+    border: none;
+    font-family: "Times New Roman", Times, serif;
+    font-weight: bolder;
+    width: 72px;
+}
+
+.filter-inputs {
+    border: 2px solid rgb(90, 102, 196);
+    border-radius: 7px;
+    background-color: rgb(36, 36, 36);
+    outline: none;
+    color: white;
+}
+
+.filter-inputs:disabled {
+    background-color: gray;
+}
+
+.filter-inputs-wrong {
+    background-color: rgb(161, 78, 78) !important;
+    border-color: rgb(236, 55, 55);
 }
 
 table {

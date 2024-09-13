@@ -1,3 +1,4 @@
+import * as Filter from './filter.js';
 
 const N_EXTRA_CMNDS = 30; // Should NOT be bigger then number of dumphis items!!!
 const REFRESH_VALUE = -1;
@@ -75,7 +76,6 @@ $(document).ready(function() {
         }
     });
 
-    // Test double click
     $(document).on('dblclick', '.unit-info-trig', function() {
         let elementId = $(this).closest('td').attr('id');
         if (getFocusedColumn(elementId)) {
@@ -143,8 +143,82 @@ $(document).ready(function() {
         }, 10);
     });
 
+    $('#btn-filter').on('click', function() { 
+        var $filterBox = $('.filter-container');
+
+        if ($filterBox.css("display") == "none") {
+            $filterBox.css("display", "block");
+
+            setTimeout(function() {
+                $filterBox.addClass('animation-filter-box');
+            }, 10);
+        }
+        else {
+            $filterBox.css("display", "none");
+            $filterBox.removeClass('animation-filter-box');
+        }
+    });
+
+    $('#btn-filter-apply').on('click', function() { 
+        var $filterBox = $('.filter-container');
+
+        $filterBox.css("display", "none");
+        $filterBox.removeClass('animation-filter-box');
+    });
+
+    $('#filter-inp-unit').on('input', function() {
+        let input = $(this).val();
+        let result = Filter.checkInput(input);
+
+        if (result) {
+            $('#filter-inp-unit').removeClass('filter-inputs-wrong')
+        } else {
+            $('#filter-inp-unit').addClass('filter-inputs-wrong')
+        }
+    });
+
+    $('#filter-inp-cmnd').on('input', function() {
+        let input = $(this).val();
+        let result = Filter.checkInput(input);
+
+        if (result) {
+            $('#filter-inp-cmnd').removeClass('filter-inputs-wrong')
+        } else {
+            $('#filter-inp-cmnd').addClass('filter-inputs-wrong')
+        }
+    });
+
+    $('#filter-inp-step').on('input', function() {
+        let input = $(this).val();
+        let result = Filter.checkInput(input);
+
+        if (result) {
+            $('#filter-inp-step').removeClass('filter-inputs-wrong')
+        } else {
+            $('#filter-inp-step').addClass('filter-inputs-wrong')
+        }
+    });
+
     // Handle selections
     setInterval(function() {
+        if ($("#filter-check-unit").is(':checked')) {
+            $('#filter-inp-unit').removeAttr('disabled');
+        } else {
+            $('#filter-inp-unit').attr('disabled', true);
+        }
+
+        if ($("#filter-check-cmnd").is(':checked')) {
+            $('#filter-inp-cmnd').removeAttr('disabled');
+        } else {
+            $('#filter-inp-cmnd').attr('disabled', true);
+        }
+
+        if ($("#filter-check-step").is(':checked')) {
+            $('#filter-inp-step').removeAttr('disabled');
+        } else {
+            $('#filter-inp-step').attr('disabled', true);
+        }
+
         if (newSelTimestamp != selectedTimestamp) {
             selectedTimestamp = newSelTimestamp;
             //console.log(`New timestamp selected: ${selectedTimestamp}`);

@@ -8,7 +8,7 @@
         <link rel="stylesheet" href="style.css"></style>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
         <script src="jquery-3.7.1.min.js" defer></script>
-        <script src="script2.js" defer></script>
+        <script type="module" src="script2.js" defer></script>
     </head>
 
     <body>
@@ -29,10 +29,40 @@
                 <button id="btn-search" title="Search for unit/entity, command or step">
                     <i class="fas fa-search"></i>
                 </button>
+                <button id="btn-filter" title="Filter on unit/entity, command or step">
+                    <i class="fas fa-filter"></i>
+                </button>
                 <button id="btn-help" title="Extra information about using this page">?</button>
                 <input type="checkbox" name="scrollDisable" id="check-scroll">
                 <label id="scroll-disable" for="check-scroll">Disable auto scroll</label>
             </div>
+        </div>
+
+        <div class="filter-container">
+            <ul id="filter-list">
+                <li>
+                    <input type="checkbox" name="filterUnit" id="filter-check-unit">
+                    <label class="filter-labels" for="filter-check-unit">Unit/Entity</label>
+                    <input type="text" id="filter-inp-unit" class="filter-inputs" disabled>
+                </li>
+                <li>
+                    <input type="checkbox" name="filterCmnd" id="filter-check-cmnd">
+                    <label class="filter-labels" for="filter-check-cmnd">Command</label>
+                    <input type="text" id="filter-inp-cmnd" class="filter-inputs" disabled>
+                </li>
+                <li>
+                    <input type="checkbox" name="filterStep" id="filter-check-step">
+                    <label class="filter-labels" for="filter-check-step">Step</label>
+                    <input type="text" id="filter-inp-step" class="filter-inputs" disabled>
+                </li>
+                <li>
+                <li>
+                    <div id="filter-button-container">
+                        <button class="btn-filter-ctrl" id="btn-filter-reset" title="Reset all filters">Reset</button>
+                        <button class="btn-filter-ctrl" id="btn-filter-apply" title="Apply the filters">Apply</button>
+                    </div>
+                </li>
+            </ul>
         </div>
 
         <table id="main-table">
