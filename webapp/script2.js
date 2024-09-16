@@ -1,4 +1,4 @@
-import * as Filter from './filter.js';
+import { Filter } from './filter.js';
 
 const N_EXTRA_CMNDS = 30; // Should NOT be bigger then number of dumphis items!!!
 const REFRESH_VALUE = -1;
@@ -28,6 +28,7 @@ let maxTimestampIndex = 0;
 let curSelectedColumn = Columns.UNDEF;
 
 $(document).ready(function() {
+    const filter = new Filter();
     let selectedTimestamp = 0, newSelTimestamp = 0;
     let selectedUnit = 0, newSelUnit = 0;
     let selectedCmnd = 0, newSelCmnd = 0;
@@ -161,21 +162,33 @@ $(document).ready(function() {
     });
 
     $('#btn-filter-apply').on('click', function() { 
-        var $filterBox = $('.filter-container');
+        let appliedFilters = filter.getFilters();
+        console.log("Filters applied: " + appliedFilters);
+
+        let $filterBox = $('.filter-container');
 
         $filterBox.css("display", "none");
         $filterBox.removeClass('animation-filter-box');
     });
 
+    $('#btn-filter-reset').on('click', function() { 
+        let filterInputs = [$('#filter-inp-unit'), $('#filter-inp-cmnd'), $('#filter-inp-step')];
+
+        filterInputs.forEach(input => {
+            input.val('');
+        });
+    });
+
     let inputResults = [true, true, true];
     $('#filter-inp-unit').on('input', function() {
         let input = $(this).val();
-        let result = Filter.checkInput(input);
-        inputResults[0] = result;
+        let result = filter.checkInput(input);
+        inputResults[0] = result.isValid;
+        filter.setUnitFilters(result.indexes);
 
-        if (result) {
+        if (result.isValid) {
             $('#filter-inp-unit').removeClass('filter-inputs-wrong');
-            if (Filter.allTrue(inputResults))
+            if (filter.allTrue(inputResults))
                 $('#filter-error-load').addClass('animation-filter-error');
         } else {
             $('#filter-inp-unit').addClass('filter-inputs-wrong');
@@ -186,12 +199,13 @@ $(document).ready(function() {
 
     $('#filter-inp-cmnd').on('input', function() {
         let input = $(this).val();
-        let result = Filter.checkInput(input);
-        inputResults[1] = result;
+        let result = filter.checkInput(input);
+        inputResults[1] = result.isValid;
+        filter.setCmndFilters(result.indexes);
 
-        if (result) {
+        if (result.isValid) {
             $('#filter-inp-cmnd').removeClass('filter-inputs-wrong');
-            if (Filter.allTrue(inputResults))
+            if (filter.allTrue(inputResults))
                 $('#filter-error-load').addClass('animation-filter-error');
         } else {
             $('#filter-inp-cmnd').addClass('filter-inputs-wrong');
@@ -202,12 +216,13 @@ $(document).ready(function() {
 
     $('#filter-inp-step').on('input', function() {
         let input = $(this).val();
-        let result = Filter.checkInput(input);
-        inputResults[2] = result;
+        let result = filter.checkInput(input);
+        inputResults[2] = result.isValid;
+        filter.setStepFilters(result.indexes);
 
-        if (result) {
+        if (result.isValid) {
             $('#filter-inp-step').removeClass('filter-inputs-wrong');
-            if (Filter.allTrue(inputResults))
+            if (filter.allTrue(inputResults))
                 $('#filter-error-load').addClass('animation-filter-error');
         } else {
             $('#filter-inp-step').addClass('filter-inputs-wrong');
@@ -722,12 +737,6 @@ async function jumpToSection(sectionId) {
     else {
         newPos += offsetPosition;
     }
-
-    let outText = "Scroll: " + sectionId;
-    outText += "\nHH: " + headerHeight +
-               "\nTP: " + targetPosition +
-               "\nOP: " + offsetPosition;
-    console.log(outText);
 
     await animateScroll(newPos, 600);
     $("#load-wrap").css("display", "none");

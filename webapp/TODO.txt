@@ -2,5 +2,4 @@
 - Add info box when clicking on info button
 - Add method to search for units/entities, commands or steps
 - Implement filtering:
-    * Check filter input
     * show only the timestamps that have these filters specified
