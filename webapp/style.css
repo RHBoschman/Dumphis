@@ -50,6 +50,10 @@ html, body {
     background-color: rgb(219, 217, 217);
 }
 
+.arrows:disabled:hover {
+    background-color: rgb(255, 255, 255);
+}
+
 #panel-text, #panel-unit {
     color: white;
     padding-left: 10px;
@@ -62,7 +66,6 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    /* background-color: rgb(0, 255, 26); */
 }
 
 #panel-right {
@@ -71,7 +74,6 @@ html, body {
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    /* background-color: red; */
 }
 
 #btn-search, #btn-filter {
@@ -79,6 +81,18 @@ html, body {
     border: none;
     padding: 5px 10px;
     height: 60%;
+}
+
+#btn-filter:disabled:hover, 
+#btn-search:disabled:hover,
+#btn-help:disabled:hover {
+    background-color: rgb(36, 36, 36);
+}
+
+#btn-filter:disabled > *,
+#btn-search:disabled > *,
+#btn-help:disabled {
+    color: rgb(68, 68, 68)
 }
 
 .fa-search, .fa-filter {
@@ -202,6 +216,38 @@ html, body {
 .filter-inputs-wrong {
     background-color: rgb(161, 78, 78) !important;
     border-color: rgb(236, 55, 55);
+}
+
+#filter-error-container {
+    width: 215px;
+    height: 50px;
+    top: 245px;
+    right: 195px;
+    position: fixed;
+    z-index: 2;
+    background-color: rgb(255, 203, 203);
+    box-sizing: border-box;
+    display: none;
+}
+
+#filter-error-text {
+    color: red;
+    padding: 5px 8px;
+}
+
+#filter-error-load {
+    width: 100%;
+    height: 3px;
+    background-color: red;
+}
+
+.animation-filter-error {
+    animation: filterLoad 2s linear;
+}
+
+@keyframes filterLoad {
+    from { width: 100%; }
+    to { width: 0%; }
 }
 
 table {

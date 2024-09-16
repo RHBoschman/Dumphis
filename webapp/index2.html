@@ -19,21 +19,21 @@
         <div id="ctrl-panel">
             <div id="panel-left">
                 <button id="render" title="Start rendering the data from the snapshot">START</button>
-                <button class="arrows" id="next" title="Next time stamp">&#9660;</button>
-                <button class="arrows" id="previous" title="Previous time stamp">&#9650;</button>
+                <button class="arrows disable" id="next" title="Next time stamp" disabled>&#9660;</button>
+                <button class="arrows disable" id="previous" title="Previous time stamp" disabled>&#9650;</button>
                 <div id="panel-text">Changed unit:</div>
                 <div id="panel-unit"></div>
             </div>
             <div id="panel-right">
                 <input type="text" id="input-search" placeholder="Search...">
-                <button id="btn-search" title="Search for unit/entity, command or step">
+                <button class="disable" id="btn-search" title="Search for unit/entity, command or step" disabled>
                     <i class="fas fa-search"></i>
                 </button>
-                <button id="btn-filter" title="Filter on unit/entity, command or step">
+                <button class="disable" id="btn-filter" title="Filter on unit/entity, command or step" disabled>
                     <i class="fas fa-filter"></i>
                 </button>
-                <button id="btn-help" title="Extra information about using this page">?</button>
-                <input type="checkbox" name="scrollDisable" id="check-scroll">
+                <button class="disable" id="btn-help" title="Extra information about using this page" disabled>?</button>
+                <input class="disable" type="checkbox" name="scrollDisable" id="check-scroll" disabled>
                 <label id="scroll-disable" for="check-scroll">Disable auto scroll</label>
             </div>
         </div>
@@ -63,6 +63,12 @@
                     </div>
                 </li>
             </ul>
+        </div>
+        <div id="filter-error-container">
+            <div id="filter-error-text">
+                Input field can only have indexes separated by commas!
+            </div>
+            <div id="filter-error-load"></div>
         </div>
 
         <table id="main-table">

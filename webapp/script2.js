@@ -61,6 +61,7 @@ $(document).ready(function() {
                 console.error('Error fetching JSON:', error);
             });
         $(this).prop('disabled', true);
+        $('.disable').prop('disabled', false);
     });
 
     // Buttons to iterate over timestamps
@@ -166,38 +167,59 @@ $(document).ready(function() {
         $filterBox.removeClass('animation-filter-box');
     });
 
+    let inputResults = [true, true, true];
     $('#filter-inp-unit').on('input', function() {
         let input = $(this).val();
         let result = Filter.checkInput(input);
+        inputResults[0] = result;
 
         if (result) {
-            $('#filter-inp-unit').removeClass('filter-inputs-wrong')
+            $('#filter-inp-unit').removeClass('filter-inputs-wrong');
+            if (Filter.allTrue(inputResults))
+                $('#filter-error-load').addClass('animation-filter-error');
         } else {
-            $('#filter-inp-unit').addClass('filter-inputs-wrong')
+            $('#filter-inp-unit').addClass('filter-inputs-wrong');
+            $('#filter-error-container').css('display', 'block');
+            $('#filter-error-load').removeClass('animation-filter-error');
         }
     });
 
     $('#filter-inp-cmnd').on('input', function() {
         let input = $(this).val();
         let result = Filter.checkInput(input);
+        inputResults[1] = result;
 
         if (result) {
-            $('#filter-inp-cmnd').removeClass('filter-inputs-wrong')
+            $('#filter-inp-cmnd').removeClass('filter-inputs-wrong');
+            if (Filter.allTrue(inputResults))
+                $('#filter-error-load').addClass('animation-filter-error');
         } else {
-            $('#filter-inp-cmnd').addClass('filter-inputs-wrong')
+            $('#filter-inp-cmnd').addClass('filter-inputs-wrong');
+            $('#filter-error-container').css('display', 'block');
+            $('#filter-error-load').removeClass('animation-filter-error');
         }
     });
 
     $('#filter-inp-step').on('input', function() {
         let input = $(this).val();
         let result = Filter.checkInput(input);
+        inputResults[2] = result;
 
         if (result) {
-            $('#filter-inp-step').removeClass('filter-inputs-wrong')
+            $('#filter-inp-step').removeClass('filter-inputs-wrong');
+            if (Filter.allTrue(inputResults))
+                $('#filter-error-load').addClass('animation-filter-error');
         } else {
-            $('#filter-inp-step').addClass('filter-inputs-wrong')
+            $('#filter-inp-step').addClass('filter-inputs-wrong');
+            $('#filter-error-container').css('display', 'block');
+            $('#filter-error-load').removeClass('animation-filter-error');
         }
     });
+
+    $('#filter-error-load').on('animationend', function() {
+        $('#filter-error-load').removeClass('animation-filter-error');
+        $('#filter-error-container').css('display', 'none');
+    })
 
     // Handle selections
     setInterval(function() {
@@ -217,6 +239,11 @@ $(document).ready(function() {
             $('#filter-inp-step').removeAttr('disabled');
         } else {
             $('#filter-inp-step').attr('disabled', true);
+        }
+
+        if ($('.filter-container').css("display") == "none") {
+            $('#filter-error-load').removeClass('animation-filter-error');
+            $('#filter-error-container').css('display', 'none');
         }
 
         if (newSelTimestamp != selectedTimestamp) {
