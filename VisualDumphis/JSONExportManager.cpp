@@ -69,6 +69,7 @@ void JSONExportManager::exportDumphisData(const std::vector<DumpHis>* dumpHisDat
 
 	for (const DumpHis& e : *dumpHisData) {
 		json dump = {
+			{"ID", e.getHisId()},
 			{"time", e.getTime()},
 			{"unitId", e.getUnitId()},
 			{"cmdId", e.getCmdId()},

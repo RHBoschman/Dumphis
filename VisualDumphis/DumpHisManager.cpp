@@ -12,6 +12,7 @@ void DumpHisManager::createData(const std::string& path) {
 		std::string str = line;
 		DumpHis element;
 
+		element.setHisId(getUniqueId());
 		element.setTime(readTime(str));
 		element.setUnitId(readUnit(str));
 		element.setCmdId(readCmd(str));
@@ -145,4 +146,10 @@ size_t DumpHisManager::readUntilComma(const std::string& src, std::string& dst) 
 
 	dst = result;
 	return pos_comma;
+}
+
+std::string DumpHisManager::getUniqueId(void) {
+	std::stringstream ss;
+	ss << std::hex << uniqueId++;
+	return ss.str();
 }

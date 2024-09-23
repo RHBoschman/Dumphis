@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <format>
+#include <sstream>
 #include "tools/tls.h";
 #include "DumpHis.h"
 
@@ -17,6 +18,7 @@ public:
 private:
 	tls::LogManager log;
 	std::vector<DumpHis> data;
+	long long int uniqueId = 0;
 
 	std::string readTime(std::string& str);
 	int readUnit(std::string& str);
@@ -25,5 +27,6 @@ private:
 	int readStep(std::string& str);
 	int readAlarm(std::string& str);
 	size_t readUntilComma(const std::string& src, std::string& dst);
+	std::string getUniqueId(void);
 };
 

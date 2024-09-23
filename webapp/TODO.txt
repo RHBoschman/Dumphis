@@ -1,5 +1,10 @@
-- Finish scrolling -> selecting timetamp with higher index then last one (outside viewport)
-- Add info box when clicking on info button
-- Add method to search for units/entities, commands or steps
-- Implement filtering:
-    * show only the timestamps that have these filters specified
+New version:
+ - Add loading screen when rendering
+ - Find unit/cmnd/step names and display those instead
+ - Make selecting possible
+ - Add coloring for time stamps with alarms and some states (like in info box).
+ - Manage auto scroll
+ - Add filtering when rendering
+ - Add search method
+ - Add help button
+ - Add view code for step

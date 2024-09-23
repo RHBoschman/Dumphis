@@ -1,5 +1,9 @@
 #include "DumpHis.h"
 
+void DumpHis::setHisId(const std::string& id) {
+	hisId = id;
+}
+
 void DumpHis::setTime(const std::string& t) {
 	time = t;
 }
@@ -32,6 +36,10 @@ void DumpHis::printData(void) {
 	std::cout << "\tStep: " << stepId;
 	std::cout << "\tState: " << unitState;
 	std::cout << "\tAlarm: " << alarmId;
+}
+
+std::string DumpHis::getHisId(void) const {
+	return hisId;
 }
 
 std::string DumpHis::getTime(void) const {

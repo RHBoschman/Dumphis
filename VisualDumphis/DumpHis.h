@@ -6,6 +6,7 @@
 class DumpHis
 {
 public:
+	void setHisId(const std::string& id);
 	void setTime(const std::string& t);
 	void setUnitId(const int n);
 	void setCmdId(const int n);
@@ -13,6 +14,7 @@ public:
 	void setState(const int n);
 	void setAlarmId(const int n);
 	void printData(void);
+	std::string getHisId(void) const;
 	std::string getTime(void) const;
 	int getUnitId(void) const;
 	int getCmdId(void) const;
@@ -21,6 +23,7 @@ public:
 	int getAlarmId(void) const;
 
 private:
+	std::string hisId;
 	std::string time;
 	int unitId;
 	int cmdId;
