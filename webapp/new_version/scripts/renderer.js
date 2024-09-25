@@ -1,8 +1,13 @@
 import { Filter } from "./filter.js";
 
 export class Renderer {
+    // Constr: initialize variables
     constructor() {
         this.filter = new Filter();
+        
+        // TMP: lines below is just for testing the filters 
+        // let result = this.filter.checkInput("430");
+        // this.filter.setUnitFilters(result.indexes);
 
         this.dumphisPath = '../../exports/DumphisData.json';
         this.unitInfoPath = '../../exports/UnitInfoData.json';
@@ -12,8 +17,8 @@ export class Renderer {
         this.functionDataObj = null;
     }
 
+    // Collect all JSON data
     init () {
-        // Collect JSON data
         return Promise.all([
             this.readJSON(this.dumphisPath), 
             this.readJSON(this.unitInfoPath), 
@@ -30,7 +35,7 @@ export class Renderer {
             });
     }
 
-    // Function to read data from the generated JSON files
+    // Read data from the generated JSON files
     readJSON(path) {
         return fetch(path)
             .then(response => {
@@ -47,6 +52,7 @@ export class Renderer {
             });
     }
 
+    // Render the data (filters applied)
     renderData() {
         return new Promise((resolve, reject) => {
             console.log("Starting to render all data");
@@ -54,6 +60,8 @@ export class Renderer {
             console.log("Applying filters...");
 
             let text = "";
+            let totalCounter = 0;
+            let filteredCounter = 0;
 
             try {
             this.dumphisDataObj.data.forEach(item => {
@@ -63,15 +71,24 @@ export class Renderer {
                 let cmnd = item.cmdId;
                 let step = item.stepId;
 
-                text += 
-                    `<tr class="data-sample" id="${rowId}">
-                        <td class="col-general col-time" >${time}</td>
-                        <td class="col-general col-unit">${unit}</td>
-                        <td class="col-general col-cmnd">${cmnd}</td>
-                        <td class="col-general col-step">${step}</td>
-                    </tr>`;
+                if (this.filter.checkFor(this.filter.Types.UNIT, unit)    || 
+                    this.filter.checkFor(this.filter.Types.COMMAND, cmnd) ||
+                    this.filter.checkFor(this.filter.Types.STEP, step) 
+                ) {
+                    text += 
+                        `<tr class="data-sample" id="${rowId}">
+                            <td class="col-general col-time" >${time}</td>
+                            <td class="col-general col-unit">${unit}</td>
+                            <td class="col-general col-cmnd">${cmnd}</td>
+                            <td class="col-general col-step">${step}</td>
+                        </tr>`;
+
+                    filteredCounter++;
+                }
+                totalCounter++;
             });
 
+            console.log(`Created text for ${filteredCounter} / ${totalCounter} items`);
             resolve(text);
 
             } catch(error) {

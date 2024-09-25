@@ -1,10 +1,8 @@
 New version:
- - Add loading screen when rendering
  - Find unit/cmnd/step names and display those instead
  - Make selecting possible
  - Add coloring for time stamps with alarms and some states (like in info box).
  - Manage auto scroll
- - Add filtering when rendering
  - Add search method
  - Add help button
  - Add view code for step

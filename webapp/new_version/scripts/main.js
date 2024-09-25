@@ -3,19 +3,18 @@ import { Searcher } from "./searcher.js";
 
 $(document).ready(function() {
     const renderer = new Renderer();
+
+    $('#load-wrap').css("display", "flex");
     renderer.init()
     .then(() => {
         console.log("Initialization successful");
+        $('#load-wrap').css("display", "none");
+
+
+/********* ALL EVENT LISTENERS (START) *********/
 
         // Start button to read and render data
-        $('#render').on('click', function() {
-            $('.data-sample').remove();
-            renderer.renderData().then(text => {
-                $('#main-table').append(text);
-            }).catch(text => {
-                $('#main-table').append(text);
-            });
-        });
+        $('#render').on('click', () => generalRenderData(renderer));
 
         // Arrow buttons iterate over the time stamps
         $('#next').on('click', function() {});
@@ -58,7 +57,7 @@ $(document).ready(function() {
         });
 
         // Filter apply is same as render
-        $('#btn-filter-apply').on('click', function() {});
+        $('#btn-filter-apply').on('click', () => generalRenderData(renderer));
 
         $('#btn-filter-reset').on('click', function() { 
             let filterInputs = [$('#filter-inp-unit'), $('#filter-inp-cmnd'), $('#filter-inp-step')];
@@ -77,6 +76,8 @@ $(document).ready(function() {
             $('#filter-error-load').removeClass('animation-filter-error');
             $('#filter-error-container').css('display', 'none');
         });
+
+/********* ALL EVENT LISTENERS (END) *********/
 
         // Main loop
         setInterval(function() {
@@ -107,5 +108,17 @@ $(document).ready(function() {
     .catch(error => {
         console.error("Initialization failed:", error);
         $('body').append('<p id="init-error">! ERROR while retrieving data. See console for any catched errors</p>');
+        $('#load-wrap').css("display", "none");
     });
 });
+
+function generalRenderData(renderer) {
+    $('#load-wrap').css("display", "flex");
+    $('.data-sample').remove();
+    renderer.renderData().then(text => {
+        $('#main-table').append(text);
+    }).catch(text => {
+        $('#main-table').append(text);
+    });
+    $('#load-wrap').css("display", "none");
+}
