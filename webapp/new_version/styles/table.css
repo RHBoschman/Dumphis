@@ -24,7 +24,8 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-}
+    text-align: left;
+    padding-left: 10px;}
 
 .col-general:hover {
     border-left: 1px solid black;
@@ -32,11 +33,18 @@
 }
 
 .col-time, .col-cmnd {
-    text-align: center;
     background-color: lightgray;
 }
 
 .col-unit, .col-step {
-    text-align: center;
     background-color: rgb(233, 233, 233);
+}
+
+#col-alarm {
+    background-color: rgb(231, 173, 173);
+    color: rgb(224, 74, 74);
+}
+
+#col-wait {
+    color: rgb(117, 200, 122);
 }

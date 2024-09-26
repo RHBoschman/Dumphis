@@ -56,7 +56,6 @@ export class Renderer {
     renderData() {
         return new Promise((resolve, reject) => {
             console.log("Starting to render all data");
-
             console.log("Applying filters...");
 
             let text = "";
@@ -67,20 +66,38 @@ export class Renderer {
             this.dumphisDataObj.data.forEach(item => {
                 let rowId = item.ID;
                 let time = item.time;
-                let unit = item.unitId;
-                let cmnd = item.cmdId;
-                let step = item.stepId;
+                let unitId = item.unitId;
+                let cmndId = item.cmdId;
+                let stepId = item.stepId;
+                let alarmId = item.alarmId;
+                let stateId = item.unitState;
 
-                if (this.filter.checkFor(this.filter.Types.UNIT, unit)    || 
-                    this.filter.checkFor(this.filter.Types.COMMAND, cmnd) ||
-                    this.filter.checkFor(this.filter.Types.STEP, step) 
+                if (this.filter.checkFor(this.filter.Types.UNIT, unitId)    || 
+                    this.filter.checkFor(this.filter.Types.COMMAND, cmndId) ||
+                    this.filter.checkFor(this.filter.Types.STEP, stepId) 
                 ) {
+                    let unitObj = this.findUnit(unitId);
+                    let unitName = this.findUnitName(unitObj);
+                    let funcObj = this.findFunction(unitObj.funcId);
+                    let cmndObj = this.findCmnd(funcObj, cmndId);
+                    let cmndName = this.findCmndName(cmndObj, cmndId);
+                    let stepName = (stepId == 0) ? "START_STEP" : stepId;
+
+                    let addColor = "";
+                    let addAlarmUnit = "";
+                    if (stateId < 0) {
+                        addColor = 'id="col-alarm"';
+                        addAlarmUnit = ` \u2192${alarmId}`;
+                    }
+                    else if (stateId == 127)
+                        addColor = 'id="col-wait"';
+
                     text += 
                         `<tr class="data-sample" id="${rowId}">
-                            <td class="col-general col-time" >${time}</td>
-                            <td class="col-general col-unit">${unit}</td>
-                            <td class="col-general col-cmnd">${cmnd}</td>
-                            <td class="col-general col-step">${step}</td>
+                            <td ${addColor} class="col-general col-time">${time+addAlarmUnit}</td>
+                            <td ${addColor} class="col-general col-unit">${unitName}</td>
+                            <td ${addColor} class="col-general col-cmnd">${cmndName}</td>
+                            <td ${addColor} class="col-general col-step">${stepName}</td>
                         </tr>`;
 
                     filteredCounter++;
@@ -97,5 +114,57 @@ export class Renderer {
                 reject(errorText);
             }
         });
+    }
+
+    // Find unit object by dumphis unit id
+    findUnit(unitId) {
+        return this.unitInfoDataObj.data.find(item => item.id === unitId);
+    }
+
+    // Find name of unit from unit JSON object
+    findUnitName(foundUnit) {
+        return (foundUnit.name.length == 0) ? `??? (${foundUnit.id})` : `${foundUnit.name} (${foundUnit.id})`
+    }
+
+    // Find function object from function id (from unit object)
+    findFunction(funcId) {
+        return this.functionDataObj.data.find(item => item.funcId === funcId);
+    }
+
+    // Find command object from function object and dumphis command id
+    findCmnd(funcObj, cmndId) {
+        for (let i = 0; i < funcObj.cmnds.length; i++) {
+            if (funcObj.cmnds[i].id === cmndId) {
+                return {
+                    obj: funcObj.cmnds[i],
+                    isFall: false
+                };
+            }
+        }
+
+        for (let i = 0; i < funcObj.fallCmnds.length; i++) {
+            if (funcObj.fallCmnds[i].id === cmndId) {
+                return {
+                    obj: funcObj.fallCmnds[i],
+                    isFall: true
+                };
+            }
+        }
+
+        return {
+            obj: null,
+            isFall: false
+        }
+    }
+
+    // Find command name from command object
+    findCmndName(cmndObj, cmndId) {
+        if (cmndObj.obj != null) {
+            if (cmndObj.isFall)
+                return `(FALL) ${cmndObj.obj.name} (${cmndObj.obj.id})`;
+            else
+                return `${cmndObj.obj.name} (${cmndObj.obj.id})`;
+        } else
+            return `error (${cmndId})`;
     }
 }

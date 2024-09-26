@@ -1,8 +1,10 @@
 New version:
- - Find unit/cmnd/step names and display those instead
+ - Remove green coloring for wait state and think of something else instead
  - Make selecting possible
- - Add coloring for time stamps with alarms and some states (like in info box).
  - Manage auto scroll
  - Add search method
  - Add help button
  - Add view code for step
+ - Show step name i.s.o. index (info is difficult to retrieve. Possible
+    approach: retrieve as much info as possible. Everything missed is lost.
+    If lost, just show id)
