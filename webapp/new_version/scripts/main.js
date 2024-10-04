@@ -1,6 +1,8 @@
 import { Renderer } from "./renderer.js";
 import { Searcher } from "./searcher.js";
 
+let selectedRow = 0;
+
 $(document).ready(function() {
     const renderer = new Renderer();
 
@@ -14,11 +16,24 @@ $(document).ready(function() {
 /********* ALL EVENT LISTENERS (START) *********/
 
         // Start button to read and render data
-        $('#render').on('click', () => generalRenderData(renderer));
+        $('#render').on('click', () => {
+            generalRenderData(renderer);
+            enablePanel();
+            selectRow();
+        });
 
         // Arrow buttons iterate over the time stamps
-        $('#next').on('click', function() {});
-        $('#previous').on('click', function() {});
+        $('#next').on('click', function() {
+            if (selectedRow < renderer.lastRenderId)
+                selectedRow++;
+            selectRow();
+        });
+
+        $('#previous').on('click', function() {
+            if (selectedRow > 0)
+                selectedRow--;
+            selectRow();
+        });
 
         // Trigger for info boxes
         $(document).on('dblclick', '.info-trig', function() {});
@@ -57,7 +72,11 @@ $(document).ready(function() {
         });
 
         // Filter apply is same as render
-        $('#btn-filter-apply').on('click', () => generalRenderData(renderer));
+        $('#btn-filter-apply').on('click', () => {
+            generalRenderData(renderer);
+            selectedRow = 0; // Select first row again
+            selectRow();
+        });
 
         $('#btn-filter-reset').on('click', function() { 
             let filterInputs = [$('#filter-inp-unit'), $('#filter-inp-cmnd'), $('#filter-inp-step')];
@@ -121,4 +140,19 @@ function generalRenderData(renderer) {
         $('#main-table').append(text);
     });
     $('#load-wrap').css("display", "none");
+}
+
+function enablePanel() {
+    $('.arrows').prop('disabled', false);
+    $('.panel-text').css('display', 'block');
+    $('#btn-search').prop('disabled', false);
+    $('#btn-filter').prop('disabled', false);
+    $('#btn-help').prop('disabled', false);
+    $('check-scroll').prop('disabled', false);
+}
+
+function selectRow() {
+    $('.selected').removeClass('selected');
+    $(`.r${selectedRow}`).addClass('selected');
+    console.log("selected first row: " + selectedRow);
 }

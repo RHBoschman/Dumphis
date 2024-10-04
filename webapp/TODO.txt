@@ -1,5 +1,4 @@
 New version:
- - Remove green coloring for wait state and think of something else instead
  - Make selecting possible
  - Manage auto scroll
  - Add search method

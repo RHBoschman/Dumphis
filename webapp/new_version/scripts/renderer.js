@@ -15,6 +15,7 @@ export class Renderer {
         this.dumphisDataObj = null;
         this.unitInfoDataObj = null;
         this.functionDataObj = null;
+        this.lastRenderId = 0;
     }
 
     // Collect all JSON data
@@ -83,23 +84,17 @@ export class Renderer {
                     let cmndName = this.findCmndName(cmndObj, cmndId);
                     let stepName = (stepId == 0) ? "START_STEP" : stepId;
 
-                    let addColor = "";
-                    let addAlarmUnit = "";
-                    if (stateId < 0) {
-                        addColor = 'id="col-alarm"';
-                        addAlarmUnit = ` \u2192${alarmId}`;
-                    }
-                    else if (stateId == 127)
-                        addColor = 'id="col-wait"';
+                    let addStatusBox = this.getStatusBox(stateId, alarmId);
 
                     text += 
-                        `<tr class="data-sample" id="${rowId}">
-                            <td ${addColor} class="col-general col-time">${time+addAlarmUnit}</td>
-                            <td ${addColor} class="col-general col-unit">${unitName}</td>
-                            <td ${addColor} class="col-general col-cmnd">${cmndName}</td>
-                            <td ${addColor} class="col-general col-step">${stepName}</td>
+                        `<tr class="data-sample r${filteredCounter}" id="${rowId}">
+                            <td class="col-general col-time">${time}${addStatusBox}</td>
+                            <td class="col-general col-unit">${unitName}</td>
+                            <td class="col-general col-cmnd">${cmndName}</td>
+                            <td class="col-general col-step">${stepName}</td>
                         </tr>`;
 
+                    this.lastRenderId = filteredCounter;
                     filteredCounter++;
                 }
                 totalCounter++;
@@ -166,5 +161,25 @@ export class Renderer {
                 return `${cmndObj.obj.name} (${cmndObj.obj.id})`;
         } else
             return `error (${cmndId})`;
+    }
+
+    // Generate HTML for a status box
+    getStatusBox(status, text) {
+        let product;
+        switch (status) {
+            case -1:
+                product = `<div class="status-box" id="status-box-alarm">${text}</div>`;
+                break;
+
+            case 127: // Ignore 'text' since function call always passes alarmId
+                product = `<div class="status-box" id="status-box-wait"></div>`;
+                break;
+
+            default:
+                product = "";
+                break;
+        }
+
+        return product;
     }
 }

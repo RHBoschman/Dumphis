@@ -18,6 +18,7 @@
     font-weight: bold;
     position: sticky;
     top: 50px;
+    z-index: 2;
 }
 
 .col-general {
@@ -40,11 +41,30 @@
     background-color: rgb(233, 233, 233);
 }
 
-#col-alarm {
+.col-time {
+    line-height: 15px; 
+    position: relative;
+}
+
+.status-box {
+    width: 50px;
+    height: 15px;
+    float: right;
+    vertical-align: middle; 
+    margin-right: 10px;
+    text-align: center;
+}
+
+#status-box-alarm {
     background-color: rgb(231, 173, 173);
     color: rgb(224, 74, 74);
 }
 
-#col-wait {
-    color: rgb(117, 200, 122);
+#status-box-wait {
+    background-color: rgb(178, 247, 183);
+    color: rgb(15, 189, 20);
+}
+
+.selected > *{
+    background-color: rgb(148, 157, 230);
 }
