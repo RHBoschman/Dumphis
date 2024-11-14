@@ -1,5 +1,4 @@
 New version:
- - Make selecting possible
  - Manage auto scroll
  - Add search method
  - Add help button

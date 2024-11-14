@@ -19,7 +19,9 @@ $(document).ready(function() {
         $('#render').on('click', () => {
             generalRenderData(renderer);
             enablePanel();
-            selectRow();
+            requestAnimationFrame(() => {
+                selectRow();
+            });
         });
 
         // Arrow buttons iterate over the time stamps
@@ -32,6 +34,13 @@ $(document).ready(function() {
         $('#previous').on('click', function() {
             if (selectedRow > 0)
                 selectedRow--;
+            selectRow();
+        });
+
+        // Handle selecting row
+        $('tbody').on('click', '.data-sample', function() {
+            let rowId = $(this).attr('id');
+            selectedRow = parseInt(rowId, 16);
             selectRow();
         });
 
@@ -122,7 +131,10 @@ $(document).ready(function() {
                 $('#filter-error-load').removeClass('animation-filter-error');
                 $('#filter-error-container').css('display', 'none');
             }
-        }, 1);
+
+            let currentScrollPosition = $('body').scrollTop();
+            //console.log("Current scroll position:", currentScrollPosition);
+        }, 500);
     })
     .catch(error => {
         console.error("Initialization failed:", error);
@@ -131,6 +143,7 @@ $(document).ready(function() {
     });
 });
 
+// Render the data table
 function generalRenderData(renderer) {
     $('#load-wrap').css("display", "flex");
     $('.data-sample').remove();
@@ -142,17 +155,39 @@ function generalRenderData(renderer) {
     $('#load-wrap').css("display", "none");
 }
 
+// Enable all necessary components
 function enablePanel() {
     $('.arrows').prop('disabled', false);
     $('.panel-text').css('display', 'block');
     $('#btn-search').prop('disabled', false);
     $('#btn-filter').prop('disabled', false);
     $('#btn-help').prop('disabled', false);
-    $('check-scroll').prop('disabled', false);
+    $('#check-scroll').prop('disabled', false);
 }
 
+// Make the selection visible
 function selectRow() {
     $('.selected').removeClass('selected');
     $(`.r${selectedRow}`).addClass('selected');
-    console.log("selected first row: " + selectedRow);
+    let elementId = $(`.r${selectedRow}`).attr('id');
+    if (!$('#check-scroll').prop('checked'))
+        scrollToElement(elementId);
 }
+
+function scrollToElement(elementId) {
+    const $element = $("#" + elementId);
+    if ($element.length) {
+        const headerHeight = $("#ctrl-panel").height();
+        const tableHeaderHeight = $("#main-table-header").height();
+        const OFFSET = 40;
+        const yPosition = $element.offset().top - (headerHeight + tableHeaderHeight + OFFSET);
+
+        let currentScrollPosition = $('body').scrollTop();
+        let newScrollPos = currentScrollPosition + yPosition;
+
+        $('body').animate({ scrollTop: newScrollPos }, 'smooth');
+    } else {
+        console.warn(`Element with id "${elementId}" not found.`);
+    }
+  }
+  
