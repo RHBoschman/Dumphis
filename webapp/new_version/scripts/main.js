@@ -22,6 +22,7 @@ $(document).ready(function() {
             requestAnimationFrame(() => {
                 selectRow();
             });
+            $('#render').prop('disabled', true);
         });
 
         // Arrow buttons iterate over the time stamps
@@ -39,8 +40,9 @@ $(document).ready(function() {
 
         // Handle selecting row
         $('tbody').on('click', '.data-sample', function() {
-            let rowId = $(this).attr('id');
-            selectedRow = parseInt(rowId, 16);
+            const rowClass = $(this).attr('class');
+            const match = rowClass.match(/\br(\d+)/);
+            selectedRow = match[1];
             selectRow();
         });
 
@@ -82,9 +84,13 @@ $(document).ready(function() {
 
         // Filter apply is same as render
         $('#btn-filter-apply').on('click', () => {
+            $('.filter-container').css("display", "none");
+            $('.filter-container').removeClass('animation-filter-box');
             generalRenderData(renderer);
-            selectedRow = 0; // Select first row again
-            selectRow();
+            requestAnimationFrame(() => {
+                selectedRow = 0; // Select first row again
+                selectRow();
+            });
         });
 
         $('#btn-filter-reset').on('click', function() { 
@@ -132,9 +138,8 @@ $(document).ready(function() {
                 $('#filter-error-container').css('display', 'none');
             }
 
-            let currentScrollPosition = $('body').scrollTop();
-            //console.log("Current scroll position:", currentScrollPosition);
-        }, 500);
+            renderer.checkFiltersContinuously();
+        }, 1);
     })
     .catch(error => {
         console.error("Initialization failed:", error);
@@ -146,7 +151,6 @@ $(document).ready(function() {
 // Render the data table
 function generalRenderData(renderer) {
     $('#load-wrap').css("display", "flex");
-    $('.data-sample').remove();
     renderer.renderData().then(text => {
         $('#main-table').append(text);
     }).catch(text => {
@@ -174,6 +178,7 @@ function selectRow() {
         scrollToElement(elementId);
 }
 
+// Set the selected row on top
 function scrollToElement(elementId) {
     const $element = $("#" + elementId);
     if ($element.length) {

@@ -40,25 +40,25 @@ export class Filter {
     }
 
     setUnitFilters(indexes) {
-        this.allFilters.units = indexes;
+        if ($('#filter-check-unit').prop('checked'))
+            this.allFilters.units = indexes;
     }
 
-    // setCmndFilters(indexes) {
-    //     this.allFilters.cmnds = indexes;
-    // }
+    setCmndFilters(indexes) {
+        if ($('#filter-check-cmnd').prop('checked'))
+            this.allFilters.cmnds = indexes;
+    }
 
-    // setStepFilters(indexes) {
-    //     this.allFilters.steps = indexes;
-    // }
+    setStepFilters(indexes) {
+        if ($('#filter-check-step').prop('checked'))
+            this.allFilters.steps = indexes;
+    }
 
-    // allTrue(results) {
-    //     for (let i = 0; i < results.length; i++) {
-    //         if (results[i] != true) {
-    //             return false;
-    //         }
-    //     }
-    //     return true;
-    // }
+    resetAll() {
+        this.allFilters.units = [];
+        this.allFilters.cmnds = [];
+        this.allFilters.steps = [];
+    }
 
     // Check if index of type is in filter
     // true = in filter or there are no filters -> so render
@@ -71,18 +71,59 @@ export class Filter {
             return true;
         } 
         else { // There are filters
+            let isEmpty;
+
             switch(type) {
                 case this.Types.UNIT:
-                    return this.allFilters.units.includes(index);
+                    isEmpty = (this.allFilters.units.length == 0);
+                    return (isEmpty ? true : this.allFilters.units.includes(index));
+
                 case this.Types.COMMAND:
-                    return this.allFilters.cmnds.includes(index);
+                    isEmpty = (this.allFilters.cmnds.length == 0);
+                    return (isEmpty ? true : this.allFilters.cmnds.includes(index));
+
                 case this.Types.STEP:
-                    return this.allFilters.steps.includes(index);
+                    isEmpty = (this.allFilters.steps.length == 0);
+                    return (isEmpty ? true : this.allFilters.steps.includes(index));
+
                 default:
                     console.error(`Type ${type} does not exist`);
                     return false;
             }
         }
     }
+
+    checkContinuously() {
+        let unit_check = this.checkInput($('#filter-inp-unit').val());
+        let cmnd_check = this.checkInput($('#filter-inp-cmnd').val());
+        let step_check = this.checkInput($('#filter-inp-step').val());
+
+        if (!unit_check.isValid || !cmnd_check.isValid || !step_check.isValid) {
+            // Error
+            $('#filter-error-container').css('display', 'block');
+            $('#filter-error-load').removeClass('animation-filter-error');
+        }
+        else {
+            // No error
+            $('#filter-error-load').addClass('animation-filter-error');
+        }
+
+        // Specific input bar
+        if (!unit_check.isValid) 
+            $('#filter-inp-unit').addClass('filter-inputs-wrong');
+        else 
+            $('#filter-inp-unit').removeClass('filter-inputs-wrong');   
+
+        if (!cmnd_check.isValid) 
+            $('#filter-inp-cmnd').addClass('filter-inputs-wrong');
+        else
+            $('#filter-inp-cmnd').removeClass('filter-inputs-wrong'); 
+
+        if (!step_check.isValid) 
+            $('#filter-inp-step').addClass('filter-inputs-wrong');
+        else
+            $('#filter-inp-step').removeClass('filter-inputs-wrong'); 
+    }
+
 }
 

@@ -4,10 +4,6 @@ export class Renderer {
     // Constr: initialize variables
     constructor() {
         this.filter = new Filter();
-        
-        // TMP: lines below is just for testing the filters 
-        // let result = this.filter.checkInput("430");
-        // this.filter.setUnitFilters(result.indexes);
 
         this.dumphisPath = '../../exports/DumphisData.json';
         this.unitInfoPath = '../../exports/UnitInfoData.json';
@@ -59,53 +55,64 @@ export class Renderer {
             console.log("Starting to render all data");
             console.log("Applying filters...");
 
+            let unit_filters = this.filter.checkInput($('#filter-inp-unit').val());
+            let cmnd_filters = this.filter.checkInput($('#filter-inp-cmnd').val());
+            let step_filters = this.filter.checkInput($('#filter-inp-step').val());
+
             let text = "";
             let totalCounter = 0;
             let filteredCounter = 0;
-
             try {
-            this.dumphisDataObj.data.forEach(item => {
-                let rowId = item.ID;
-                let time = item.time;
-                let unitId = item.unitId;
-                let cmndId = item.cmdId;
-                let stepId = item.stepId;
-                let alarmId = item.alarmId;
-                let stateId = item.unitState;
+                if (unit_filters.isValid && cmnd_filters.isValid && step_filters.isValid) {
+                    this.filter.resetAll();
+                    this.filter.setUnitFilters(unit_filters.indexes);
+                    this.filter.setCmndFilters(cmnd_filters.indexes);
+                    this.filter.setStepFilters(step_filters.indexes);
+                    
+                    this.dumphisDataObj.data.forEach(item => {
+                        let rowId = item.ID;
+                        let time = item.time;
+                        let unitId = item.unitId;
+                        let cmndId = item.cmdId;
+                        let stepId = item.stepId;
+                        let alarmId = item.alarmId;
+                        let stateId = item.unitState;
+                        if (this.filter.checkFor(this.filter.Types.UNIT, unitId)    && 
+                            this.filter.checkFor(this.filter.Types.COMMAND, cmndId) &&
+                            this.filter.checkFor(this.filter.Types.STEP, stepId) 
+                        ) {
+                            let unitObj = this.findUnit(unitId);
+                            let unitName = this.findUnitName(unitObj);
+                            let funcObj = this.findFunction(unitObj.funcId);
+                            let cmndObj = this.findCmnd(funcObj, cmndId);
+                            let cmndName = this.findCmndName(cmndObj, cmndId);
+                            let stepName = (stepId == 0) ? "START_STEP" : stepId;
+                            let addStatusBox = this.getStatusBox(stateId, alarmId);
+                            text += 
+                                `<tr class="data-sample r${filteredCounter}" id="${rowId}">
+                                    <td class="col-general col-time">${time}${addStatusBox}</td>
+                                    <td class="col-general col-unit">${unitName}</td>
+                                    <td class="col-general col-cmnd">${cmndName}</td>
+                                    <td class="col-general col-step">${stepName}</td>
+                                </tr>`;
+                            this.lastRenderId = filteredCounter;
+                            filteredCounter++;
+                        }
+                        totalCounter++;
+                    });
 
-                if (this.filter.checkFor(this.filter.Types.UNIT, unitId)    || 
-                    this.filter.checkFor(this.filter.Types.COMMAND, cmndId) ||
-                    this.filter.checkFor(this.filter.Types.STEP, stepId) 
-                ) {
-                    let unitObj = this.findUnit(unitId);
-                    let unitName = this.findUnitName(unitObj);
-                    let funcObj = this.findFunction(unitObj.funcId);
-                    let cmndObj = this.findCmnd(funcObj, cmndId);
-                    let cmndName = this.findCmndName(cmndObj, cmndId);
-                    let stepName = (stepId == 0) ? "START_STEP" : stepId;
-
-                    let addStatusBox = this.getStatusBox(stateId, alarmId);
-
-                    text += 
-                        `<tr class="data-sample r${filteredCounter}" id="${rowId}">
-                            <td class="col-general col-time">${time}${addStatusBox}</td>
-                            <td class="col-general col-unit">${unitName}</td>
-                            <td class="col-general col-cmnd">${cmndName}</td>
-                            <td class="col-general col-step">${stepName}</td>
-                        </tr>`;
-
-                    this.lastRenderId = filteredCounter;
-                    filteredCounter++;
+                    console.log(`Created text for ${filteredCounter} / ${totalCounter} items`);
+                    $('.data-sample').remove();
+                    resolve(text);
                 }
-                totalCounter++;
-            });
-
-            console.log(`Created text for ${filteredCounter} / ${totalCounter} items`);
-            resolve(text);
-
+                else {
+                    console.warn("Filter inputs are not correct. No data rendered");
+                    resolve($('#main-table').text());
+                }
             } catch(error) {
                 console.error("Error with rendering: " + error);
                 let errorText = `<p id="init-error">! ERROR while rendering data. See console for any catched errors</p>`;
+                $('.data-sample').remove();
                 reject(errorText);
             }
         });
@@ -181,5 +188,22 @@ export class Renderer {
         }
 
         return product;
+    }
+
+    // Show filter error
+    showFilterError(result) {
+        if (result) {
+            // if (filter.allTrue(inputResults))
+            //     $('#filter-error-load').addClass('animation-filter-error');
+        } else {
+            $('#filter-inp-unit').addClass('filter-inputs-wrong');
+            $('#filter-error-container').css('display', 'block');
+            $('#filter-error-load').removeClass('animation-filter-error');
+        }
+    }
+
+    // Update user continuously on filters
+    checkFiltersContinuously() {
+        this.filter.checkContinuously();
     }
 }
