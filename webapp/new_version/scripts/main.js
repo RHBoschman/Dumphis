@@ -41,13 +41,17 @@ $(document).ready(function() {
         // Handle selecting row
         $('tbody').on('click', '.data-sample', function() {
             const rowClass = $(this).attr('class');
-            const match = rowClass.match(/\br(\d+)/);
-            selectedRow = match[1];
-            selectRow();
+            setTimeout(function() {
+                const match = rowClass.match(/\br(\d+)/);
+                selectedRow = match[1];
+                selectRow();
+            }, 100); // Delay of 300 ms
         });
 
-        // Trigger for info boxes
-        $(document).on('dblclick', '.info-trig', function() {});
+        // Double-click trigger for info box
+        $('tbody').on('dblclick', '.data-sample', function() {
+            $('#info-box-wrapper').css("display", "block");
+        });
 
         // Removal of info box
         $('#info-close').on('click', function() {
